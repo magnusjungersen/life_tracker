@@ -1,4 +1,4 @@
-// Copyright yeet
+// Copyright yeet that shit - hacker way is the only way
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,12 +41,14 @@ class _CalendarPageState extends State<CalendarPage> {
     _loadDataStatus();
   }
 
-  // Load data status from shared preferences
+  // Load data status from SharedPreferences
   void _loadDataStatus() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       for (String key in prefs.getKeys()) {
-        _dataEntered[DateTime.parse(key)] = true;
+        // Parse the stored date strings and mark the date as having data
+        DateTime date = DateTime.parse(key.split('_')[0]);
+        _dataEntered[date] = true;
       }
     });
   }
@@ -54,7 +56,10 @@ class _CalendarPageState extends State<CalendarPage> {
   // Save data status when new data is added
   void _saveDataStatus(DateTime date) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setBool(date.toIso8601String(), true);
+    prefs.setBool('${date.toIso8601String()}_hasData', true);
+    setState(() {
+      _dataEntered[date] = true;
+    });
   }
 
   @override
@@ -66,6 +71,7 @@ class _CalendarPageState extends State<CalendarPage> {
           TableCalendar(
             firstDay: DateTime.utc(2020, 10, 16),
             lastDay: DateTime.utc(2030, 3, 14),
+            headerStyle: HeaderStyle(formatButtonVisible: false, titleCentered: true),
             focusedDay: _selectedDay,
             calendarFormat: _calendarFormat,
             selectedDayPredicate: (day) {
@@ -85,19 +91,30 @@ class _CalendarPageState extends State<CalendarPage> {
               );
             },
             calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, date, _) {
+              // This builder visually marks the days with data
+              defaultBuilder: (context, date, focusedDay) {
                 if (_dataEntered[date] == true) {
-                  return Positioned(
-                    right: 1,
-                    bottom: 1,
-                    child: Icon(
-                      Icons.check_circle,
-                      size: 16.0,
-                      color: Colors.green,
+                  // Return a visually different day (e.g., with a colored background or icon)
+                  return Container(
+                    margin: const EdgeInsets.all(4.0),
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.greenAccent, // Highlight dates with data
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${date.day}',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   );
+                } else {
+                  // Default look for days without data
+                  return Center(
+                    child: Text('${date.day}'),
+                  );
                 }
-                return null;
               },
             ),
           ),

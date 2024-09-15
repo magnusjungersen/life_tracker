@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data_entry2.dart';
+import 'package:intl/intl.dart';
 
 // Data1Page - sliders for energy and wellbeing data
 class Data1Page extends StatefulWidget {
@@ -43,7 +44,7 @@ class _Data1PageState extends State<Data1Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Data Entry - ${widget.selectedDate.toLocal()}')),
+      appBar: AppBar(title: Text('Data Entry - ${DateFormat.yMMMd().format(widget.selectedDate)}')),
       body: Column(
         children: [
           Text('Energy Level'),
