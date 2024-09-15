@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mood Tracker',
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.deepPurple, 
+        brightness: Brightness.dark, 
       ),
       home: CalendarPage(),  // Set the CalendarPage as the initial screen
     );

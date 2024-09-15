@@ -15,7 +15,7 @@ class _Data2PageState extends State<Data2Page> {
   // Activities for 3 segments
   List<String> _segment1 = ["Exercise", "Reading", "Meditation", "TV", "Gaming"];
   List<String> _segment2 = ["Cooking", "Music", "Walking", "Yoga", "Art"];
-  List<String> _segment3 = ["Socializing", "Work", "Shopping", "Cleaning", "Sleeping"];
+  List<String> _segment3 = ["Socializing", "Work", "Shopping", "Cleaning", "Sleeping", "other"];
   
   // Map to track selected activities for all segments
   Map<String, bool> _selectedActivities = {};
@@ -56,7 +56,7 @@ class _Data2PageState extends State<Data2Page> {
     return GridView.builder(
       shrinkWrap: true,  // Ensures it doesn't overflow
       physics: NeverScrollableScrollPhysics(), // Avoid scrolling inside grid
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(5.0),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,  // 4 columns
         crossAxisSpacing: 10,
@@ -75,13 +75,18 @@ class _Data2PageState extends State<Data2Page> {
             backgroundColor: isSelected ? Colors.green : Colors.grey,  // Updated property
             foregroundColor: Colors.white,  // Text color
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0) // rounding of borders
-            )
+              borderRadius: BorderRadius.circular(5.0) // rounding of border
+            ), 
+            minimumSize: Size(50, 5), // set minimum size
+            padding: EdgeInsets.symmetric(horizontal: 10.0), // padding
           ),
-          child: Text(
-            activity,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 10),
+          child: FittedBox(
+            fit: BoxFit.contain, 
+              child: Text(
+                activity,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 10),
+              )
           ),
         );
       },
