@@ -61,6 +61,7 @@ class _Data2PageState extends State<Data2Page> {
         crossAxisCount: 4,  // 4 columns
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
+        childAspectRatio: 2, 
       ),
       itemCount: activities.length,
       itemBuilder: (context, index) {
