@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'data_entry2.dart';
+import 'data_entry_emotions.dart';
 import 'package:intl/intl.dart';
 
 // Data1Page - sliders for energy and wellbeing data
@@ -91,7 +91,7 @@ class _Data1PageState extends State<Data1Page> {
           ), 
           ElevatedButton(
             onPressed: () {
-              _saveData();  // Save the energy and wellbeing data
+              _saveData();  // Save data
               Navigator.push(
                 context,
                 MaterialPageRoute(

@@ -128,7 +128,7 @@ class _Data2PageState extends State<Data2Page> {
             _saveActivities();
             Navigator.popUntil(context, ModalRoute.withName('/'));
           },
-          child: Text('Add New Data'),
+          child: Text('Continue'),
         ),
       ),
     );
