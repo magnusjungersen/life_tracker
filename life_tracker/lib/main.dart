@@ -82,14 +82,6 @@ class _CalendarPageState extends State<CalendarPage> {
               setState(() {
                 _selectedDay = selectedDay;
               });
-              // Navigate to Data1Page with selectedDate
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      Data1Page(selectedDate: _selectedDay, onSave: _saveDataStatus),
-                ),
-              );
             },
             calendarBuilders: CalendarBuilders(
               // This builder visually marks the days with data
@@ -97,7 +89,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 if (_dataEntered[date] == true) {
                   // Return a visually different day (e.g., with a colored background or icon)
                   return Container(
-                    margin: const EdgeInsets.all(4.0),
+                    margin: const EdgeInsets.all(6.0),
                     padding: const EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
                       color: Colors.greenAccent, // Highlight dates with data
@@ -130,8 +122,9 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           );
         },
-        child: Icon(Icons.add),
+          child: Icon(Icons.add), // plus icon for button
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
