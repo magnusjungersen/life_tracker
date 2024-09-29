@@ -12,6 +12,8 @@ void main() {
 
 // setup the app
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,14 +29,16 @@ class MyApp extends StatelessWidget {
 
 // Calendar page
 class CalendarPage extends StatefulWidget {
+  const CalendarPage({super.key});
+
   @override
   _CalendarPageState createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  CalendarFormat _calendarFormat = CalendarFormat.month;
+  final CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _selectedDay = DateTime.now();
-  Map<DateTime, bool> _dataEntered = {};
+  final Map<DateTime, bool> _dataEntered = {};
 
   @override
   void initState() {
@@ -66,13 +70,13 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Calendar Overview')),
+      appBar: AppBar(title: const Text('Calendar Overview')),
       body: Column(
         children: [
           TableCalendar(
             firstDay: DateTime.utc(2020, 10, 16),
             lastDay: DateTime.utc(2030, 3, 14),
-            headerStyle: HeaderStyle(formatButtonVisible: false, titleCentered: true),
+            headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
             focusedDay: _selectedDay,
             calendarFormat: _calendarFormat,
             selectedDayPredicate: (day) {
@@ -91,14 +95,14 @@ class _CalendarPageState extends State<CalendarPage> {
                   return Container(
                     margin: const EdgeInsets.all(6.0),
                     padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.greenAccent, // Highlight dates with data
                       shape: BoxShape.circle,
                     ),
                     child: Center(
                       child: Text(
                         '${date.day}',
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                   );
@@ -122,7 +126,7 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           );
         },
-          child: Icon(Icons.add), // plus icon for button
+          child: const Icon(Icons.add), // plus icon for button
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

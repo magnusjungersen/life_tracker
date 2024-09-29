@@ -8,7 +8,7 @@ class Data1Page extends StatefulWidget {
   final DateTime selectedDate;
   final Function(DateTime) onSave;
 
-  Data1Page({required this.selectedDate, required this.onSave});
+  const Data1Page({super.key, required this.selectedDate, required this.onSave});
 
   @override
   _Data1PageState createState() => _Data1PageState();
@@ -31,7 +31,7 @@ class _Data1PageState extends State<Data1Page> {
     setState(() {
       _energy = prefs.getDouble('${widget.selectedDate}_energy') ?? 5;
       _wellbeing = prefs.getDouble('${widget.selectedDate}_wellbeing') ?? 5;
-      _sleepsub = prefs.getDouble('${widget.selectedDate}_sleepsub') ?? 5;
+      _sleepsub = prefs.getDouble('${widget.selectedDate}_sleepsub') ?? 2;
     });
   }
 
@@ -50,12 +50,12 @@ class _Data1PageState extends State<Data1Page> {
       appBar: AppBar(title: Text('Data Entry - ${DateFormat.yMMMd().format(widget.selectedDate)}')),
       body: Column(
         children: [
-          Text('Energy Level'),
+          const Text('Energy Level'),
           Slider(
             value: _energy,
             min: 1,
             max: 10,
-            divisions: 9,
+            divisions: 19,
             label: _energy.round().toString(),
             onChanged: (double value) {
               setState(() {
@@ -63,12 +63,12 @@ class _Data1PageState extends State<Data1Page> {
               });
             },
           ),
-          Text('Wellbeing Level'),
+          const Text('Wellbeing Level'),
           Slider(
             value: _wellbeing,
             min: 1,
             max: 10,
-            divisions: 9,
+            divisions: 19,
             label: _wellbeing.round().toString(),
             onChanged: (double value) {
               setState(() {
@@ -76,12 +76,12 @@ class _Data1PageState extends State<Data1Page> {
               });
             },
           ),
-          Text('Sleep (subjective)'),
+          const Text('Sleep (subjective)'),
           Slider(
             value: _sleepsub,
             min: 1,
             max: 3,
-            divisions: 2,
+            divisions: 5,
             label: _sleepsub.round().toString(),
             onChanged: (double value) {
             setState(() {
@@ -99,7 +99,7 @@ class _Data1PageState extends State<Data1Page> {
                 ),
               );
             },
-            child: Text('Continue'),
+            child: const Text('Continue'),
           ),
         ],
       ),

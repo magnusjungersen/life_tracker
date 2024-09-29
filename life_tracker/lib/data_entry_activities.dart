@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 class Data2Page extends StatefulWidget {
   final DateTime selectedDate;
 
-  Data2Page({required this.selectedDate});
+  const Data2Page({super.key, required this.selectedDate});
 
   @override
   _Data2PageState createState() => _Data2PageState();
@@ -13,12 +13,12 @@ class Data2Page extends StatefulWidget {
 
 class _Data2PageState extends State<Data2Page> {
   // Activities for 3 segments
-  List<String> _segment1 = ["Exercise", "Reading", "Meditation", "TV", "Gaming"];
-  List<String> _segment2 = ["Cooking", "Music", "Walking", "Yoga", "Art"];
-  List<String> _segment3 = ["Socializing", "Work", "Shopping", "Cleaning", "Sleeping", "other"];
+  final List<String> _segment1 = ["Exercise", "Reading", "Meditation", "TV", "Gaming"];
+  final List<String> _segment2 = ["Cooking", "Music", "Walking", "Yoga", "Art"];
+  final List<String> _segment3 = ["Socializing", "Work", "Shopping", "Cleaning", "Sleeping", "other"];
   
   // Map to track selected activities for all segments
-  Map<String, bool> _selectedActivities = {};
+  final Map<String, bool> _selectedActivities = {};
 
   @override
   void initState() {
@@ -55,9 +55,9 @@ class _Data2PageState extends State<Data2Page> {
   Widget _buildActivityGrid(List<String> activities) {
     return GridView.builder(
       shrinkWrap: true,  // Ensures it doesn't overflow
-      physics: NeverScrollableScrollPhysics(), // Avoid scrolling inside grid
-      padding: EdgeInsets.all(5.0),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      physics: const NeverScrollableScrollPhysics(), // Avoid scrolling inside grid
+      padding: const EdgeInsets.all(5.0),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,  // 4 columns
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
@@ -78,15 +78,15 @@ class _Data2PageState extends State<Data2Page> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5.0) // rounding of border
             ), 
-            minimumSize: Size(50, 5), // set minimum size
-            padding: EdgeInsets.symmetric(horizontal: 10.0), // padding
+            minimumSize: const Size(50, 5), // set minimum size
+            padding: const EdgeInsets.symmetric(horizontal: 10.0), // padding
           ),
           child: FittedBox(
             fit: BoxFit.contain, 
               child: Text(
                 activity,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 10),
+                style: const TextStyle(fontSize: 10),
               )
           ),
         );
@@ -103,18 +103,18 @@ class _Data2PageState extends State<Data2Page> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text('Segment 1', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
             _buildActivityGrid(_segment1),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text('Segment 2', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
             _buildActivityGrid(_segment2),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text('Segment 3', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
             _buildActivityGrid(_segment3),
@@ -128,7 +128,7 @@ class _Data2PageState extends State<Data2Page> {
             _saveActivities();
             Navigator.popUntil(context, ModalRoute.withName('/'));
           },
-          child: Text('Add New Data'),
+          child: const Text('Add New Data'),
         ),
       ),
     );
