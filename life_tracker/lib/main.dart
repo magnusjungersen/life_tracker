@@ -7,7 +7,7 @@ import 'data_entry_sliders.dart';
 
 // Actually run the app
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 // setup the app
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple, 
         brightness: Brightness.dark, 
       ),
-      home: CalendarPage(),  // Set the CalendarPage as the initial screen
+      home: const CalendarPage(),  // Set the CalendarPage as the initial screen
     );
   }
 }
