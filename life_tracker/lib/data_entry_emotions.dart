@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+import 'data_entry_activities.dart'; 
 
+// this page tracks emotions: positive, negative and complex
+
+// Data2Page - Emotions
 class Data2Page extends StatefulWidget {
   final DateTime selectedDate;
 
@@ -12,47 +16,48 @@ class Data2Page extends StatefulWidget {
 }
 
 class _Data2PageState extends State<Data2Page> {
-  // Activities for 3 segments
-  final List<String> _segment1 = ["Exercise", "Reading", "Meditation", "TV", "Gaming"];
-  final List<String> _segment2 = ["Cooking", "Music", "Walking", "Yoga", "Art"];
-  final List<String> _segment3 = ["Socializing", "Work", "Shopping", "Cleaning", "Sleeping", "other"];
+  // List of emotions categories: positive, negative and complex
+  final List<String> _positive = ["Happy", "Grateful", "Inspired", "Confident", "Proud", "Relaxed", "Content", "Curious", "Optimistic", "Loved", "Calm", "Hopeful"];
+  final List<String> _negative = ["Tired", "Indifferent", "Bored", "Sad", "Lonely", "Anxious", "Frustrated", "Overwhelmed", "Angry", "Jealous", "Guilty", "Disappointed", "Nervous", "Grief", "Insecure", "Stressed"];
+  final List<String> _complex = ["Restless", "Nostalgic", "Conflicted"];
+
   
-  // Map to track selected activities for all segments
-  final Map<String, bool> _selectedActivities = {};
+  // Map to track selected emotions for all segments
+  final Map<String, bool> _selectedEmotions = {};
 
   @override
   void initState() {
     super.initState();
-    _loadActivities();
+    _loadEmotions();
   }
 
-  // Load selected activities from SharedPreferences
-  void _loadActivities() async {
+  // Load selected emotions from SharedPreferences
+  void _loadEmotions() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      for (String activity in _segment1 + _segment2 + _segment3) {
-        _selectedActivities[activity] = prefs.getBool('${widget.selectedDate}_$activity') ?? false;
+      for (String emotion in _positive + _negative + _complex) {
+        _selectedEmotions[emotion] = prefs.getBool('${widget.selectedDate}_$emotion') ?? false;
       }
     });
   }
 
-  // Save selected activities to SharedPreferences
-  void _saveActivities() async {
+  // Save selected emotions to SharedPreferences
+  void _saveEmotions() async {
     final prefs = await SharedPreferences.getInstance();
-    for (String activity in _selectedActivities.keys) {
-      prefs.setBool('${widget.selectedDate}_$activity', _selectedActivities[activity]!);
+    for (String emotion in _selectedEmotions.keys) {
+      prefs.setBool('${widget.selectedDate}_$emotion', _selectedEmotions[emotion]!);
     }
   }
 
-  // Toggle the selected state of an activity
-  void _toggleActivity(String activity) {
+  // Toggle the selected state of an emotion
+  void _toggleEmotion(String emotion) {
     setState(() {
-      _selectedActivities[activity] = !_selectedActivities[activity]!;
+      _selectedEmotions[emotion] = !_selectedEmotions[emotion]!;
     });
   }
 
   // Create a grid of buttons for a segment
-  Widget _buildActivityGrid(List<String> activities) {
+  Widget _buildEmotionGrid(List<String> emotions) {
     return GridView.builder(
       shrinkWrap: true,  // Ensures it doesn't overflow
       physics: const NeverScrollableScrollPhysics(), // Avoid scrolling inside grid
@@ -63,14 +68,14 @@ class _Data2PageState extends State<Data2Page> {
         mainAxisSpacing: 10,
         childAspectRatio: 2, 
       ),
-      itemCount: activities.length,
+      itemCount: emotions.length,
       itemBuilder: (context, index) {
-        String activity = activities[index];
-        bool isSelected = _selectedActivities[activity] ?? false;
+        String emotion = emotions[index];
+        bool isSelected = _selectedEmotions[emotion] ?? false;
 
         return ElevatedButton(
           onPressed: () {
-            _toggleActivity(activity);
+            _toggleEmotion(emotion);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: isSelected ? Colors.green : Colors.grey,  // Updated property
@@ -84,7 +89,7 @@ class _Data2PageState extends State<Data2Page> {
           child: FittedBox(
             fit: BoxFit.contain, 
               child: Text(
-                activity,
+                emotion,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 10),
               )
@@ -105,19 +110,19 @@ class _Data2PageState extends State<Data2Page> {
           children: [
             const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Text('Segment 1', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              child: Text('Positive emotions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
-            _buildActivityGrid(_segment1),
+            _buildEmotionGrid(_positive),
             const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Text('Segment 2', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              child: Text('Negative emotions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
-            _buildActivityGrid(_segment2),
+            _buildEmotionGrid(_negative),
             const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Text('Segment 3', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              child: Text('Complex emotions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
-            _buildActivityGrid(_segment3),
+            _buildEmotionGrid(_complex),
           ],
         ),
       ),
@@ -125,8 +130,14 @@ class _Data2PageState extends State<Data2Page> {
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton(
           onPressed: () {
-            _saveActivities();
-            Navigator.popUntil(context, ModalRoute.withName('/'));
+            _saveEmotions();
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Data3Page(selectedDate: widget.selectedDate),
+                ),
+            );
+            // Navigator.popUntil(context, ModalRoute.withName('/'));
           },
           child: const Text('Continue'),
         ),
