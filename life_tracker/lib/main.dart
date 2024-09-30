@@ -35,10 +35,9 @@ class CalendarPage extends StatefulWidget {
   _CalendarPageState createState() => _CalendarPageState();
 }
 
-
 // Pages
 // Main (calendar overview)
-// Enter data: Sliders -> Emotions -> Activities
+// Enter data: Sliders -> Emotions -> Activities -> saves and updates data and returns to Main
 
 class _CalendarPageState extends State<CalendarPage> {
   final CalendarFormat _calendarFormat = CalendarFormat.month;
