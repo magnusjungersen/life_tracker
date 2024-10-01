@@ -3,11 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'data_entry_emotions.dart'; // emotions page
 import 'package:intl/intl.dart';
 
-
-
-
-
-
 // Data1Page - sliders for energy and wellbeing data
 class Data1Page extends StatefulWidget {
   final DateTime selectedDate;

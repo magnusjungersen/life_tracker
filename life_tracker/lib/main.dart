@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Mood Tracker',
+      title: 'Life Tracker',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple, 
         brightness: Brightness.dark, 
