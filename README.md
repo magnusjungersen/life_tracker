@@ -9,4 +9,3 @@ To-do:
 - Setup to work with google sheets (add for this in app ie. don't hardcode sheet)
 - Test on actual phone lol
 
-
