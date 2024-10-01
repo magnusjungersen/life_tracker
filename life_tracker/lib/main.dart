@@ -1,9 +1,54 @@
 // Copyright yeet that shit - hacker way is the only way
 
+// import packages
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'data_entry_sliders.dart';
+import 'data_entry_sliders.dart'; // slider page
+import 'package:gsheets/gsheets.dart'; // for google sheets integration
+import 'dart:convert'; // For JSON decoding
+import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+Future<void> syncDataIfOnline() async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+
+  if (connectivityResult == ConnectivityResult.mobile ||
+      connectivityResult == ConnectivityResult.wifi) {
+    // Online, sync the unsynced data to Google Sheets
+    await syncUnsyncedData();
+  } else {
+    // Offline, store data locally
+    await storeDataLocally();
+  }
+}
+
+Future<void> storeDataLocally() async {
+  final prefs = await SharedPreferences.getInstance();
+  // Store unsynced data
+  prefs.setString('unsynced_data', 'Mood data');
+}
+
+Future<void> syncUnsyncedData() async {
+  final prefs = await SharedPreferences.getInstance();
+  final unsyncedData = prefs.getString('unsynced_data');
+  if (unsyncedData != null) {
+    // Send data to Google Sheets
+    final file = File('path/to/credentials.json');
+    final credentials = await file.readAsString();
+    final gsheets = GSheets(credentials);
+    final spreadsheetId = '1_chI4kqpjmfQwTl5WKnhgx4XY2SBJUTZuKWgOWeyWeU';
+    final sheet = await gsheets.spreadsheet(spreadsheetId);
+    final worksheet = sheet.worksheetByTitle('LifeTracker');
+
+    // Add the unsynced data to Google Sheets
+    await worksheet!.values.appendRow([unsyncedData]);
+
+    // Clear the locally stored unsynced data
+    prefs.remove('unsynced_data');
+  }
+}
 
 // Actually run the app
 void main() {

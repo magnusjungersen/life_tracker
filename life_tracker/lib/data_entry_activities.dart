@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:auto_size_text/auto_size_text.dart'; // for scaling text
+import 'package:auto_size_text/auto_size_text.dart'; // for scaling text properly
 import 'package:intl/intl.dart';
 
 // shold tracks data for activities and other external factors. All categories are listed here: 
