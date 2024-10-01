@@ -6,10 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'data_entry_sliders.dart'; // slider page
 import 'package:gsheets/gsheets.dart'; // for google sheets integration
-import 'dart:convert'; // For JSON decoding
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> syncDataIfOnline() async {
   var connectivityResult = await (Connectivity().checkConnectivity());
