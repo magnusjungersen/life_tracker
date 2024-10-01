@@ -38,7 +38,7 @@ class _Data3PageState extends State<Data3Page> {
   // Map to track selected activities for all segments
   final Map<String, bool> _selectedActivities = {};
 
-  double _workSliderValue = 1.0;
+  int _selectedWork = 1;
   int _selectedFood = 1;
   int _selectedSleep = 1;
   int _selectedAlcohol = 1;
@@ -57,7 +57,7 @@ class _Data3PageState extends State<Data3Page> {
       for (String activity in _freetime + _social + _habits + _weather + _work + _chores + _health + _other) {
         _selectedActivities[activity] = prefs.getBool('${widget.selectedDate}_$activity') ?? false;
       }
-      _workSliderValue = prefs.getDouble('${widget.selectedDate}_work') ?? 1.0;
+      _selectedWork = prefs.getInt('${widget.selectedDate}_work') ?? 1;
       _selectedFood = prefs.getInt('${widget.selectedDate}_food') ?? 2;
       _selectedSleep = prefs.getInt('${widget.selectedDate}_sleep') ?? 2;
       _selectedAlcohol = prefs.getInt('${widget.selectedDate}_alcohol') ?? 1;
@@ -71,7 +71,7 @@ class _Data3PageState extends State<Data3Page> {
     for (String activity in _selectedActivities.keys) {
       prefs.setBool('${widget.selectedDate}_$activity', _selectedActivities[activity]!);
     }
-    prefs.setDouble('${widget.selectedDate}_work', _workSliderValue);
+    prefs.setInt('${widget.selectedDate}_work', _selectedWork);
     prefs.setInt('${widget.selectedDate}_food', _selectedFood);
     prefs.setInt('${widget.selectedDate}_sleep', _selectedSleep);
     prefs.setInt('${widget.selectedDate}_alcohol', _selectedAlcohol);
@@ -131,19 +131,19 @@ class _Data3PageState extends State<Data3Page> {
   // Build radio button for some categor
   Widget _buildRadioButton(String title, List<String> options, int selectedValue, Function(int?) onChanged) {
   return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.center,
     children: [
       Align(
         alignment: Alignment.center, // Center align the category title
         child: Text(
           title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold), // category font size
           textAlign: TextAlign.center, // Ensures text is centered
         ),
       ),
       const SizedBox(height: 8), // Add some space between title and buttons
       Wrap(
-        alignment: WrapAlignment.start, // Left align the buttons
+        alignment: WrapAlignment.end, // Left align the buttons
         spacing: 8.0, // Spacing between buttons
         runSpacing: 4.0, // Vertical spacing between rows of buttons
         children: List.generate(options.length, (index) {
@@ -161,7 +161,7 @@ class _Data3PageState extends State<Data3Page> {
             ),
             child: Text(
               options[index],
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12), // button text font size
             ),
           );
         }),
@@ -203,25 +203,14 @@ class _Data3PageState extends State<Data3Page> {
               padding: EdgeInsets.all(8.0),
               child: Text('Work', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text('Work Effort', style: TextStyle(fontSize: 16)),
-                  Slider(
-                    value: _workSliderValue,
-                    min: 0,
-                    max: 3,
-                    divisions: 6,
-                    label: _workSliderValue.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        _workSliderValue = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
+            _buildRadioButton('Work effort', ['None', 'Low', 'Average', 'Good', 'Intense'], _selectedWork, (int? value) {
+              setState(() {
+                _selectedWork = value!;
+              });
+            }), 
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text('Work activities', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
             ),
             _buildActivityGrid(_work),
             const Padding(

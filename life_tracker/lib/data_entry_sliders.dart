@@ -53,10 +53,10 @@ class _Data1PageState extends State<Data1Page> {
           const Text('Energy Level'),
           Slider(
             value: _energy,
-            min: 1,
-            max: 10,
-            divisions: 19,
-            label: _energy.round().toString(),
+            min: 0,
+            max: 49,
+            divisions: 49,
+            // label: _energy.round().toString(),
             onChanged: (double value) {
               setState(() {
                 _energy = value;
@@ -67,9 +67,9 @@ class _Data1PageState extends State<Data1Page> {
           Slider(
             value: _wellbeing,
             min: 1,
-            max: 10,
-            divisions: 19,
-            label: _wellbeing.round().toString(),
+            max: 49,
+            divisions: 49,
+            // label: _wellbeing.round().toString(),
             onChanged: (double value) {
               setState(() {
                 _wellbeing = value;
@@ -79,10 +79,10 @@ class _Data1PageState extends State<Data1Page> {
           const Text('Sleep (subjective)'),
           Slider(
             value: _sleepsub,
-            min: 1,
-            max: 3,
-            divisions: 5,
-            label: _sleepsub.round().toString(),
+            min: 0,
+            max: 49,
+            divisions: 49,
+            // label: _sleepsub.round().toString(),
             onChanged: (double value) {
             setState(() {
                 _sleepsub = value;
