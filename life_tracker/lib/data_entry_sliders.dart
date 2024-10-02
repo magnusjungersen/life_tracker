@@ -14,10 +14,10 @@ class Data1Page extends StatefulWidget {
 }
 
 class _Data1PageState extends State<Data1Page> {
-  double _energy = 25;
-  double _mood = 25;
-  double _sleep = 25; 
-  double _stress = 25; 
+  double _energy = 50;
+  double _mood = 50;
+  double _sleep = 50; 
+  double _stress = 50; 
 
   @override
   void initState() {
@@ -33,10 +33,10 @@ class _Data1PageState extends State<Data1Page> {
 
     if (data != null) {
       setState(() {
-        _energy = (data['energy'] as int).toDouble();
-        _mood = (data['wellbeing'] as int).toDouble();
-        _sleep = (data['sleep'] as int).toDouble();
-        _stress = (data['stress'] as int).toDouble();
+        _energy = (data['energy'] as int?)?.toDouble() ?? 50.0;
+        _mood = (data['wellbeing'] as int?)?.toDouble() ?? 50.0;
+        _sleep = (data['sleep'] as int?)?.toDouble() ?? 50.0;
+        _stress = (data['stress'] as int?)?.toDouble() ?? 50.0;
       });
     }
   }
@@ -70,7 +70,7 @@ class _Data1PageState extends State<Data1Page> {
               value: _mood,
               min: 0,
               max: 100,
-              divisions: 100,
+              divisions: 99,
               // label: _mood.round().toString(),
               onChanged: (double value) {
                 setState(() {
@@ -84,7 +84,7 @@ class _Data1PageState extends State<Data1Page> {
               value: _energy,
               min: 0,
               max: 100,
-              divisions: 100,
+              divisions: 99,
               // label: _energy.round().toString(),
               onChanged: (double value) {
                 setState(() {
@@ -98,7 +98,7 @@ class _Data1PageState extends State<Data1Page> {
               value: _sleep,
               min: 0,
               max: 100,
-              divisions: 100,
+              divisions: 99,
               // label: _sleep.round().toString(),
               onChanged: (double value) {
                 setState(() {

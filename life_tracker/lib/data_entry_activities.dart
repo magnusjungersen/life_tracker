@@ -20,15 +20,15 @@ class _Data3PageState extends State<Data3Page> {
   final List<String> _weather = ["Sunny", "Cloudy", "Rain", "Snow", "Heat", "Storm", "Wind"];
   final List<String> _work = ["Class", "Study", "Exam", "Conference", "Give talk", "Research", "Meetings", "Management", "Admin", "Deep work"];
   final List<String> _chores = ["Cleaning", "Cooking food", "Other practical stuff"];
-  final List<String> _health = ["Exercise", "Sport", "Walk", "Wellness (e.g., spa)", "Swim", "Sick (being ill)", "Sore (after workout)", "Pain", "Drugs", "Masturbation", "Nap", "Sex"];
-  final List<String> _other = ["Impactful positive event", "Impactful negative event", "Travel", "Dont have own room"];
+  final List<String> _health = ["Exercise", "Sport", "Walk", "Wellness", "Swim", "Sick", "Sore", "Pain", "Drugs", "Masturbation", "Nap", "Sex"];
+  final List<String> _other = ["Positive event", "Negative event", "Travel", "Dont have own room"];
   
   // Map to track selected activities for all segments
   final Map<String, bool> _selectedActivities = {};
 
   int _selectedWork = 1;
-  int _selectedFood = 1;
-  int _selectedSleep = 1;
+  int _selectedFood = 2;
+  int _selectedSleep = 2;
   int _selectedAlcohol = 1;
   int _selectedCaffeine = 1;
 
@@ -49,8 +49,8 @@ class _Data3PageState extends State<Data3Page> {
           _selectedActivities[activity] = data[activity.replaceAll(' ', '_')] == 1;
         }
         _selectedWork = data['work'] ?? 1;
-        _selectedFood = data['food'] ?? 1;
-        _selectedSleep = data['sleep'] ?? 1;
+        _selectedFood = data['food'] ?? 2;
+        _selectedSleep = data['sleep'] ?? 2;
         _selectedAlcohol = data['alcohol'] ?? 1;
         _selectedCaffeine = data['caffeine'] ?? 1;
       });
