@@ -1,29 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';  // Used to construct file paths
 
-// insert data into data base
-Future<int> insertData(Map<String, dynamic> row) async {
-  final db = await DatabaseHelper().database;
-  return await db.insert('life_tracking', row);
-}
-
-// retrieve data from data base
-Future<List<Map<String, dynamic>>> fetchData() async {
-  final db = await DatabaseHelper().database;
-  return await db.query('life_tracking');
-}
-
-// update data in data base
-Future<int> updateData(int id, Map<String, dynamic> updatedRow) async {
-  final db = await DatabaseHelper().database;
-  return await db.update(
-    'life_tracking',
-    updatedRow,
-    where: 'id = ?',
-    whereArgs: [id],
-  );
-}
-
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   factory DatabaseHelper() => _instance;
@@ -53,7 +30,7 @@ class DatabaseHelper {
   // Create table of all data
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE mood_tracking (
+      CREATE TABLE life_tracking (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT NOT NULL, 
         mood INTEGER,
@@ -152,7 +129,29 @@ class DatabaseHelper {
     ''');
   }
 
-  // Function to close the database
+  Future<int> insertOrUpdateData(Map<String, dynamic> row) async {
+    final db = await database;
+    return await db.insert(
+      'life_tracking',
+      row,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<Map<String, dynamic>?> getDataByDate(String date) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'life_tracking',
+      where: 'date = ?',
+      whereArgs: [date],
+    );
+
+    if (maps.isNotEmpty) {
+      return maps.first;
+    }
+    return null;
+  }
+
   Future close() async {
     final db = await database;
     db.close();

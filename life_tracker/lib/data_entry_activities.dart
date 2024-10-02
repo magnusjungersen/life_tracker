@@ -38,26 +38,25 @@ class _Data3PageState extends State<Data3Page> {
     _loadActivities();
   }
 
-  // Load selected activities from SharedPreferences
   void _loadActivities() async {
     DatabaseHelper dbHelper = DatabaseHelper();
 
     Map<String, dynamic>? data = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
-
-    setState(() {
-      for (String activity in _freetime + _social + _habits + _weather + _work + _chores + _health + _other) {
-        _selectedActivities[activity] = data?[activity] == 1 ? true : false;
-      }
-      _selectedWork = data?['work'] ?? 1;
-      _selectedFood = data?['food'] ?? 1;
-      _selectedSleep = data?['sleep'] ?? 1;
-      _selectedAlcohol = data?['alcohol'] ?? 1;
-      _selectedCaffeine = data?['caffeine'] ?? 1;
-    });
+    
+    if (data != null) {
+      setState(() {
+        for (String activity in _freetime + _social + _habits + _weather + _work + _chores + _health + _other) {
+          _selectedActivities[activity] = data[activity.replaceAll(' ', '_')] == 1;
+        }
+        _selectedWork = data['work'] ?? 1;
+        _selectedFood = data['food'] ?? 1;
+        _selectedSleep = data['sleep'] ?? 1;
+        _selectedAlcohol = data['alcohol'] ?? 1;
+        _selectedCaffeine = data['caffeine'] ?? 1;
+      });
+    }
   }
 
-
-  // Save selected activities to SharedPreferences
   // Save selected activities to the SQL database
   void _saveActivities() async {
     DatabaseHelper dbHelper = DatabaseHelper();
@@ -73,7 +72,7 @@ class _Data3PageState extends State<Data3Page> {
 
     // Add activities to data map
     for (String activity in _selectedActivities.keys) {
-      data[activity] = _selectedActivities[activity]! ? 1 : 0;
+      data[activity.replaceAll(' ', '_')] = _selectedActivities[activity]! ? 1 : 0;
     }
 
     // Insert or update the data in the database

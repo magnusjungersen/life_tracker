@@ -53,35 +53,13 @@ class _CalendarPageState extends State<CalendarPage> {
 
   // Load data status from SQL database
   void _loadDataStatus() async {
-    final db = await DatabaseHelper().database;
-    final data = await db.query('life_tracking');  // Get all records from the database
+    DatabaseHelper dbHelper = DatabaseHelper();
+    final data = await dbHelper.getDataByDate(_selectedDay.toIso8601String());
 
     setState(() {
-      for (var row in data) {
-        DateTime date = DateTime.parse(row['date']);
-        _dataEntered[date] = true;  // Mark the date as having data
+      if (data != null) {
+        _dataEntered[_selectedDay] = true;
       }
-    });
-  }
-
-  // Save data status when new data is added
-  void _saveDataStatus(DateTime date) async {
-    // Insert the new data into the SQL database
-    final db = await DatabaseHelper().database;
-
-    Map<String, dynamic> newEntry = {
-      'date': date.toIso8601String(),
-      'mood': 0,  // Placeholder values, you will update with actual data
-      'energy': 0, 
-      'productivity': 0,
-      'stress': 0,
-      'synced': 0,  // Initially mark data as unsynced
-    };
-
-    await db.insert('life_tracking', newEntry);  // Insert new data
-
-    setState(() {
-      _dataEntered[date] = true;  // Update the UI to show data for that date
     });
   }
 
@@ -140,7 +118,7 @@ class _CalendarPageState extends State<CalendarPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Data1Page(selectedDate: _selectedDay, onSave: _saveDataStatus),
+              builder: (context) => Data1Page(selectedDate: _selectedDay),
             ),
           );
         },
@@ -150,4 +128,3 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 }
-
