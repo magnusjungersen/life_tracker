@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import 'sql.dart';
 import 'package:intl/intl.dart';
 import 'data_entry_activities.dart'; 
@@ -33,20 +34,34 @@ class _Data2PageState extends State<Data2Page> {
 
   // Load selected emotions from SharedPreferences
   void _loadEmotions() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      for (String emotion in _positive + _negative + _complex) {
-        _selectedEmotions[emotion] = prefs.getBool('${widget.selectedDate}_$emotion') ?? false;
-      }
-    });
+    DatabaseHelper dbHelper = DatabaseHelper();
+
+    Map<String, dynamic>? data = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
+
+    if (data != null) {
+      setState(() {
+        for (String emotion in _positive + _negative + _complex) {
+          _selectedEmotions[emotion] = data[emotion.replaceAll(' ', '_')] == 1;
+        }
+      });
+    }
   }
 
   // Save selected emotions to SharedPreferences
   void _saveEmotions() async {
-    final prefs = await SharedPreferences.getInstance();
+    DatabaseHelper dbHelper = DatabaseHelper();
+
+    Map<String, dynamic> data = {
+      'date': widget.selectedDate.toIso8601String(),
+    };
+
+    // add emotions to data map
     for (String emotion in _selectedEmotions.keys) {
-      prefs.setBool('${widget.selectedDate}_$emotion', _selectedEmotions[emotion]!);
+      data[emotion.replaceAll(' ', '_')] = _selectedEmotions[emotion]! ? 1 : 0;
     }
+
+    // Insert or update the data in the database
+    await dbHelper.insertOrUpdateData(data);
   }
 
   // Toggle the selected state of an emotion
