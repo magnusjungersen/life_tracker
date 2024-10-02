@@ -1,13 +1,13 @@
-# Overview of options
+# Overview of options (total = 92)
 
-### Overall scales
-- Mood 1-10 scale
-- Energy 1-10 scale
-- Productivity 1-10 scale
-- Stress 1-10 scale
+### Overall scales (4)
+- Mood 1-50 scale
+- Energy 1-50 scale
+- Productivity 1-50 scale
+- Stress 1-50 scale
 
-### Emotions (33)
-- Positive
+### Emotions (31)
+- Positive (12)
 	- Happy
 	- Grateful
 	- Inspired
@@ -20,7 +20,7 @@
 	- Loved
 	- Calm
 	- Hopeful
-- Negative
+- Negative (16)
 	- Tired
 	- Indifferent
 	- Bored
@@ -33,24 +33,22 @@
 	- Jealous
 	- Guilty
 	- Disappointed
-	- Guilty
 	- Nervous
 	- Grief
 	- Insecure
 	- Stressed
-- Complex
+- Complex (3)
 	- Restless
 	- Nostalgic
-	- Nervous
 	- Conflicted
-### Activities
-- Free time
+### Activities (57)
+- Free time (5)
 	- Movies
 	- Read
-	- Ingest intellectual content
+	- Intellectual content
 	- Gaming
 	- Working on projects
-- Social
+- Social (8)
 	- Family
 	- Friends
 	- Party
@@ -58,12 +56,12 @@
 	- Concert
 	- Festival
 	- Alone time
-	- Organization (Synapse, Kmmunity etc.)
-- Good habits
+	- Organization
+- Good habits (3)
 	- Meditation
 	- Read before going to bed
 	- No screen before going to bed
-- Weather 
+- Weather (7)
 	- Sunny
 	- Cloudy
 	- Rain
@@ -71,11 +69,11 @@
 	- Heat
 	- Storm
 	- Wind
-- School/Work
+- School/Work (11)
 	- Class
 	- Study
 	- Exam
-	- Work (scale 0-3)
+	- Work (radio buttons: ['None', 'Low', 'Average', 'Good', 'Intense'])
 	- Conference
 	- Give talk
 	- Research
@@ -83,11 +81,11 @@
 	- Management
 	- Admin
 	- Deep work
-- Chores
+- Chores (3)
 	- Cleaning
 	- Cooking food
 	- Other practical stuff
-- Health (good and bad)
+- Health (12)
 	- Exercise
 	- Sport
 	- Walk
@@ -97,15 +95,15 @@
 	- Sore (after eg. Workout)
 	- Pain
 	- Drugs
-	- Onani
+	- Masturbation
 	- Nap
 	- Sex
-- Other
+- Other (4)
 	- Impactful postive event
 	- Impactul negative event
 	- Travel
 	- Don’t have own room
-- Other aspects (radio buttons)
+- Other aspects (radio buttons) (4)
 	- Food 1-3 scale (subjective quality)
 	- Sleep 1-3 scale (subjective quality)
 	- Alcohol 1-4 scale (no, little, medium, much)

@@ -32,7 +32,7 @@ class _Data3PageState extends State<Data3Page> {
   final List<String> _weather = ["Sunny", "Cloudy", "Rain", "Snow", "Heat", "Storm", "Wind"];
   final List<String> _work = ["Class", "Study", "Exam", "Conference", "Give talk", "Research", "Meetings", "Management", "Admin", "Deep work"];
   final List<String> _chores = ["Cleaning", "Cooking food", "Other practical stuff"];
-  final List<String> _health = ["Exercise", "Sport", "Walk", "Wellness (e.g., spa)", "Swim", "Sick (being ill)", "Sore (after workout)", "Pain", "Drugs", "Onani", "Nap", "Sex"];
+  final List<String> _health = ["Exercise", "Sport", "Walk", "Wellness (e.g., spa)", "Swim", "Sick (being ill)", "Sore (after workout)", "Pain", "Drugs", "Masturbation", "Nap", "Sex"];
   final List<String> _other = ["Impactful positive event", "Impactful negative event", "Travel", "Dont have own room"];
   
   // Map to track selected activities for all segments

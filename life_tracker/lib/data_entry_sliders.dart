@@ -15,9 +15,9 @@ class Data1Page extends StatefulWidget {
 }
 
 class _Data1PageState extends State<Data1Page> {
-  double _energy = 5;
-  double _wellbeing = 5;
-  double _sleepsub = 2; 
+  double _energy = 25;
+  double _wellbeing = 25;
+  double _sleepsub = 25; 
 
   @override
   void initState() {
@@ -29,9 +29,9 @@ class _Data1PageState extends State<Data1Page> {
   void _loadData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _energy = prefs.getDouble('${widget.selectedDate}_energy') ?? 5;
-      _wellbeing = prefs.getDouble('${widget.selectedDate}_wellbeing') ?? 5;
-      _sleepsub = prefs.getDouble('${widget.selectedDate}_sleepsub') ?? 2;
+      _energy = prefs.getDouble('${widget.selectedDate}_energy') ?? 25;
+      _wellbeing = prefs.getDouble('${widget.selectedDate}_wellbeing') ?? 25;
+      _sleepsub = prefs.getDouble('${widget.selectedDate}_sleepsub') ?? 25;
     });
   }
 
@@ -53,8 +53,8 @@ class _Data1PageState extends State<Data1Page> {
           const Text('Energy Level'),
           Slider(
             value: _energy,
-            min: 0,
-            max: 49,
+            min: 1,
+            max: 50,
             divisions: 49,
             // label: _energy.round().toString(),
             onChanged: (double value) {
@@ -67,7 +67,7 @@ class _Data1PageState extends State<Data1Page> {
           Slider(
             value: _wellbeing,
             min: 1,
-            max: 49,
+            max: 50,
             divisions: 49,
             // label: _wellbeing.round().toString(),
             onChanged: (double value) {
@@ -79,8 +79,8 @@ class _Data1PageState extends State<Data1Page> {
           const Text('Sleep (subjective)'),
           Slider(
             value: _sleepsub,
-            min: 0,
-            max: 49,
+            min: 1,
+            max: 50,
             divisions: 49,
             // label: _sleepsub.round().toString(),
             onChanged: (double value) {
