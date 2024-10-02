@@ -1,6 +1,29 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';  // Used to construct file paths
 
+// insert data into data base
+Future<int> insertData(Map<String, dynamic> row) async {
+  final db = await DatabaseHelper().database;
+  return await db.insert('life_tracking', row);
+}
+
+// retrieve data from data base
+Future<List<Map<String, dynamic>>> fetchData() async {
+  final db = await DatabaseHelper().database;
+  return await db.query('life_tracking');
+}
+
+// update data in data base
+Future<int> updateData(int id, Map<String, dynamic> updatedRow) async {
+  final db = await DatabaseHelper().database;
+  return await db.update(
+    'life_tracking',
+    updatedRow,
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+}
+
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   factory DatabaseHelper() => _instance;

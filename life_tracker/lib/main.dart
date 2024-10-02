@@ -2,24 +2,18 @@
 
 // import packages
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'data_entry_sliders.dart'; // slider page
 import 'sql.dart';
-import 'package:gsheets/gsheets.dart'; // for google sheets integration
-import 'dart:io';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
-// sync data with gsheets
-
-// Actually run the app
+// run the app
 void main() {
-  runApp(const MyApp());
+  runApp(const LifeTracker());
 }
 
 // setup the app
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class LifeTracker extends StatelessWidget {
+  const LifeTracker({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +43,7 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> {
   final CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _selectedDay = DateTime.now();
-  final Map<DateTime, bool> _dataEntered = {};
+  final Map<DateTime, bool> _dataEntered = {};  // Map to store if data is entered for a date
 
   @override
   void initState() {
@@ -57,24 +51,37 @@ class _CalendarPageState extends State<CalendarPage> {
     _loadDataStatus();
   }
 
-  // Load data status from SharedPreferences
+  // Load data status from SQL database
   void _loadDataStatus() async {
-    final prefs = await SharedPreferences.getInstance();
+    final db = await DatabaseHelper().database;
+    final data = await db.query('life_tracking');  // Get all records from the database
+
     setState(() {
-      for (String key in prefs.getKeys()) {
-        // Parse the stored date strings and mark the date as having data
-        DateTime date = DateTime.parse(key.split('_')[0]);
-        _dataEntered[date] = true;
+      for (var row in data) {
+        DateTime date = DateTime.parse(row['date']);
+        _dataEntered[date] = true;  // Mark the date as having data
       }
     });
   }
 
   // Save data status when new data is added
   void _saveDataStatus(DateTime date) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setBool('${date.toIso8601String()}_hasData', true);
+    // Insert the new data into the SQL database
+    final db = await DatabaseHelper().database;
+
+    Map<String, dynamic> newEntry = {
+      'date': date.toIso8601String(),
+      'mood': 0,  // Placeholder values, you will update with actual data
+      'energy': 0, 
+      'productivity': 0,
+      'stress': 0,
+      'synced': 0,  // Initially mark data as unsynced
+    };
+
+    await db.insert('life_tracking', newEntry);  // Insert new data
+
     setState(() {
-      _dataEntered[date] = true;
+      _dataEntered[date] = true;  // Update the UI to show data for that date
     });
   }
 

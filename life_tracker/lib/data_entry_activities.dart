@@ -1,19 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:auto_size_text/auto_size_text.dart'; // for scaling text properly
 import 'package:intl/intl.dart';
-
-// shold tracks data for activities and other external factors. All categories are listed here: 
-// everything expect "other aspects" are lists of binary options
-// Free time
-// Social
-// Good habits
-// Weather
-// School/Work
-// Chores
-// Health
-// Other
-// Other aspects (radio buttons)
+import 'sql.dart';
 
 class Data3Page extends StatefulWidget {
   final DateTime selectedDate;
@@ -25,7 +13,7 @@ class Data3Page extends StatefulWidget {
 }
 
 class _Data3PageState extends State<Data3Page> {
-  // Activities for 3 segments
+  // list all activities for buttons
   final List<String> _freetime = ["Movies", "Read", "Intellectual content", "Gaming", "Working on projects"];
   final List<String> _social = ["Family", "Friends", "Party", "Meeting new people", "Concert", "Festival", "Alone time", "Organization"];
   final List<String> _habits = ["Meditation", "Read before going to bed", "No screen before going to bed"];
@@ -52,30 +40,44 @@ class _Data3PageState extends State<Data3Page> {
 
   // Load selected activities from SharedPreferences
   void _loadActivities() async {
-    final prefs = await SharedPreferences.getInstance();
+    DatabaseHelper dbHelper = DatabaseHelper();
+
+    Map<String, dynamic>? data = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
+
     setState(() {
       for (String activity in _freetime + _social + _habits + _weather + _work + _chores + _health + _other) {
-        _selectedActivities[activity] = prefs.getBool('${widget.selectedDate}_$activity') ?? false;
+        _selectedActivities[activity] = data?[activity] == 1 ? true : false;
       }
-      _selectedWork = prefs.getInt('${widget.selectedDate}_work') ?? 1;
-      _selectedFood = prefs.getInt('${widget.selectedDate}_food') ?? 2;
-      _selectedSleep = prefs.getInt('${widget.selectedDate}_sleep') ?? 2;
-      _selectedAlcohol = prefs.getInt('${widget.selectedDate}_alcohol') ?? 1;
-      _selectedCaffeine = prefs.getInt('${widget.selectedDate}_caffeine') ?? 1;
+      _selectedWork = data?['work'] ?? 1;
+      _selectedFood = data?['food'] ?? 1;
+      _selectedSleep = data?['sleep'] ?? 1;
+      _selectedAlcohol = data?['alcohol'] ?? 1;
+      _selectedCaffeine = data?['caffeine'] ?? 1;
     });
   }
 
+
   // Save selected activities to SharedPreferences
+  // Save selected activities to the SQL database
   void _saveActivities() async {
-    final prefs = await SharedPreferences.getInstance();
+    DatabaseHelper dbHelper = DatabaseHelper();
+
+    Map<String, dynamic> data = {
+      'date': widget.selectedDate.toIso8601String(),
+      'work': _selectedWork,
+      'food': _selectedFood,
+      'sleep': _selectedSleep,
+      'alcohol': _selectedAlcohol,
+      'caffeine': _selectedCaffeine,
+    };
+
+    // Add activities to data map
     for (String activity in _selectedActivities.keys) {
-      prefs.setBool('${widget.selectedDate}_$activity', _selectedActivities[activity]!);
+      data[activity] = _selectedActivities[activity]! ? 1 : 0;
     }
-    prefs.setInt('${widget.selectedDate}_work', _selectedWork);
-    prefs.setInt('${widget.selectedDate}_food', _selectedFood);
-    prefs.setInt('${widget.selectedDate}_sleep', _selectedSleep);
-    prefs.setInt('${widget.selectedDate}_alcohol', _selectedAlcohol);
-    prefs.setInt('${widget.selectedDate}_caffeine', _selectedCaffeine);
+
+    // Insert or update the data in the database
+    await dbHelper.insertOrUpdateData(data);
   }
 
   // Toggle the selected state of an activity
