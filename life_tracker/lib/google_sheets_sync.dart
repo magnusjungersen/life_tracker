@@ -1,11 +1,11 @@
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:gsheets/gsheets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'sql.dart';
 
 class GoogleSheetsSync {
-  static const _credentials = r'../../credentials.json'; // path to credentials
-  static const _spreadsheetId = 'your-spreadsheet-id'; // spreadsheet ID
-  static const _worksheetTitle = 'YourWorksheetTitle'; // worksheet title
+  static const _spreadsheetId = '1_chI4kqpjmfQwTl5WKnhgx4XY2SBJUTZuKWgOWeyWeU'; // spreadsheet ID
+  static const _worksheetTitle = 'LifeTracker'; // worksheet title
 
   static Future<void> syncData() async {
     final connectivityResult = await Connectivity().checkConnectivity();
@@ -15,7 +15,8 @@ class GoogleSheetsSync {
     }
 
     try {
-      final gsheets = GSheets(_credentials);
+      final credentialsJson = await rootBundle.loadString('assets/credentials.json');
+      final gsheets = GSheets(credentialsJson);
       final ss = await gsheets.spreadsheet(_spreadsheetId);
       final sheet = await ss.worksheetByTitle(_worksheetTitle);
 

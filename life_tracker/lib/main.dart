@@ -45,29 +45,48 @@ class _CalendarPageState extends State<CalendarPage> {
   final CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _selectedDay = DateTime.now();
   final Map<DateTime, bool> _dataEntered = {};  // Map to store if data is entered for a date
+  final DatabaseHelper _dbHelper = DatabaseHelper();
 
   @override
   void initState() {
     super.initState();
     _loadDataStatus();
+    _syncWithGoogleSheets();
   }
 
   // Load data status from SQL database
   void _loadDataStatus() async {
-    DatabaseHelper dbHelper = DatabaseHelper();
-    final data = await dbHelper.getDataByDate(_selectedDay.toIso8601String());
-
+    final allData = await _dbHelper.getAllData();
     setState(() {
-      if (data != null) {
-        _dataEntered[_selectedDay] = true;
+      for (var data in allData) {
+        final date = DateTime.parse(data['date'] as String);
+        _dataEntered[date] = true;
       }
     });
+  }
+
+  // sync with gsheets
+  void _syncWithGoogleSheets() async {
+    await GoogleSheetsSync.syncData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Calendar Overview')),
+      appBar: AppBar(
+        title: const Text('Calendar Overview'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.sync),
+            onPressed: () {
+              _syncWithGoogleSheets();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Syncing with Google Sheets...')),
+              );
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: [
           TableCalendar(
@@ -122,6 +141,7 @@ class _CalendarPageState extends State<CalendarPage> {
               builder: (context) => Data1Page(selectedDate: _selectedDay),
             ),
           );
+          _loadDataStatus();
         },
           child: const Icon(Icons.add), // plus icon for button
       ),
