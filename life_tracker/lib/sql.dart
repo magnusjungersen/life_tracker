@@ -159,6 +159,11 @@ class DatabaseHelper {
     return null;
   }
 
+  Future<List<Map<String, dynamic>>> getAllData() async {
+    final db = await database;
+    return await db.query('life_tracking', orderBy: 'date ASC');
+  }
+
   Future<void> close() async {
     final db = await database;
     await db.close();

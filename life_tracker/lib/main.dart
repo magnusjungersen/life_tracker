@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'data_entry_sliders.dart'; // slider page
 import 'sql.dart';
+import 'google_sheets_sync.dart';
 
 // run the app
 void main() {
