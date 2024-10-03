@@ -31,42 +31,58 @@ class _Data2PageState extends State<Data2Page> {
     _loadEmotions();
   }
 
-  // Load selected emotions from SharedPreferences
+  // Load selected emotions from databse
   void _loadEmotions() async {
     DatabaseHelper dbHelper = DatabaseHelper();
 
+    // get previously added data to only overwrite relevant data
     Map<String, dynamic>? data = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
 
     if (data != null) {
       setState(() {
         for (String emotion in _positive + _negative + _complex) {
-          _selectedEmotions[emotion] = data[emotion.replaceAll(' ', '_')] == 1;
+          _selectedEmotions[emotion] = (data[emotion.replaceAll(' ', '_').toLowerCase()] ?? 0) == 1;
         }
       });
     }
   }
 
-  // Save selected emotions to SharedPreferences
+  // Save selected emotions to databse
   void _saveEmotions() async {
     DatabaseHelper dbHelper = DatabaseHelper();
 
-    Map<String, dynamic> data = {
+    // First, retrieve existing data for the date
+    Map<String, dynamic>? existingData = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
+
+    Map<String, dynamic> newData = {
       'date': widget.selectedDate.toIso8601String(),
     };
 
     // add emotions to data map
     for (String emotion in _selectedEmotions.keys) {
-      data[emotion.replaceAll(' ', '_')] = _selectedEmotions[emotion]! ? 1 : 0;
+      newData[emotion.replaceAll(' ', '_').toLowerCase()] = _selectedEmotions[emotion]! ? 1 : 0; // remember it's case sensitive
     }
 
+    //merge new data with previous data
+    if (existingData != null) {
+      // Only update the existing data with the new toggled values
+      existingData = Map<String, dynamic>.from(existingData); // create mutable copy
+      existingData.addAll(newData);
+      newData = existingData;
+    } else {
+      // If no existing data, just insert the new one
+      newData = Map<String, dynamic>.from(newData);
+    }
+
+
     // Insert or update the data in the database
-    await dbHelper.insertOrUpdateData(data);
+    await dbHelper.insertOrUpdateData(newData);
   }
 
   // Toggle the selected state of an emotion
   void _toggleEmotion(String emotion) {
     setState(() {
-      _selectedEmotions[emotion] = !_selectedEmotions[emotion]!;
+      _selectedEmotions[emotion] = !(_selectedEmotions[emotion] ?? false);
     });
   }
 

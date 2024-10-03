@@ -32,11 +32,11 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE life_tracking (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        date TEXT NOT NULL, 
-        mood INTEGER,
-        energy INTEGER,
-        productivity INTEGER,
-        stress INTEGER,
+        date TEXT NOT NULL UNIQUE, 
+        mood INTEGER DEFAULT 50,
+        energy INTEGER DEFAULT 50,
+        productivity INTEGER DEFAULT 50,
+        stress INTEGER DEFAULT 50,
         happy INTEGER DEFAULT 0,
         grateful INTEGER DEFAULT 0,
         inspired INTEGER DEFAULT 0,
@@ -94,7 +94,7 @@ class DatabaseHelper {
 	      class INTEGER DEFAULT 0, 
 	      study INTEGER DEFAULT 0, 
 	      exam INTEGER DEFAULT 0, 
-	      work INTEGER, 
+	      work INTEGER DEFAULT 1, 
 	      conference INTEGER DEFAULT 0, 
 	      give_talk INTEGER DEFAULT 0, 
 	      research INTEGER DEFAULT 0, 
@@ -121,10 +121,10 @@ class DatabaseHelper {
 	      negative_event INTEGER DEFAULT 0, 
 	      travel INTEGER DEFAULT 0, 
 	      dont_have_own_room INTEGER DEFAULT 0, 
-	      food INTEGER,
-	      sleep INTEGER,
-	      alcohol INTEGER,
-	      caffeine INTEGER
+	      food INTEGER DEFAULT 2,
+	      sleep INTEGER DEFAULT 2,
+	      alcohol INTEGER DEFAULT 1,
+	      caffeine INTEGER DEFAULT 1
       )
     ''');
   }
@@ -140,7 +140,7 @@ class DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     } catch (e) {
-      print('Error inserting data: $e'); // Print any errors for debugging
+      // print('Error inserting data: $e'); // Print any errors for debugging
       rethrow; // Rethrow the error to handle it in the calling code
     }
   }
@@ -159,8 +159,8 @@ class DatabaseHelper {
     return null;
   }
 
-  Future close() async {
+  Future<void> close() async {
     final db = await database;
-    db.close();
+    await db.close();
   }
 }

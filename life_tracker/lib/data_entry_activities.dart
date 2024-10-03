@@ -46,7 +46,7 @@ class _Data3PageState extends State<Data3Page> {
     if (data != null) {
       setState(() {
         for (String activity in _freetime + _social + _habits + _weather + _work + _chores + _health + _other) {
-          _selectedActivities[activity] = data[activity.replaceAll(' ', '_')] == 1;
+          _selectedActivities[activity] = data[activity.replaceAll(' ', '_').toLowerCase()] == 1;
         }
         _selectedWork = data['work'] ?? 1;
         _selectedFood = data['food'] ?? 2;
@@ -61,7 +61,10 @@ class _Data3PageState extends State<Data3Page> {
   void _saveActivities() async {
     DatabaseHelper dbHelper = DatabaseHelper();
 
-    Map<String, dynamic> data = {
+    // get previously added data to only overwrite relevant data
+    Map<String, dynamic>? existingData = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
+
+    Map<String, dynamic> newData = {
       'date': widget.selectedDate.toIso8601String(),
       'work': _selectedWork,
       'food': _selectedFood,
@@ -70,19 +73,26 @@ class _Data3PageState extends State<Data3Page> {
       'caffeine': _selectedCaffeine,
     };
 
-    // Add activities to data map
-    for (String activity in _selectedActivities.keys) {
-      data[activity.replaceAll(' ', '_')] = _selectedActivities[activity]! ? 1 : 0;
+    // Initialize all activities with 0 (not selected)
+    for (String activity in _freetime + _social + _habits + _weather + _work + _chores + _health + _other) {
+      newData[activity.replaceAll(' ', '_').toLowerCase()] = _selectedActivities[activity] == true ? 1 : 0;
+    }
+
+    // merge new and previous data
+    if (existingData != null) {
+      existingData = Map<String, dynamic>.from(existingData); // Create a mutable copy
+      existingData.addAll(newData);
+      newData = existingData;
     }
 
     // Insert or update the data in the database
-    await dbHelper.insertOrUpdateData(data);
+    await dbHelper.insertOrUpdateData(newData);
   }
 
   // Toggle the selected state of an activity
   void _toggleActivity(String activity) {
     setState(() {
-      _selectedActivities[activity] = !_selectedActivities[activity]!;
+      _selectedActivities[activity] = !(_selectedActivities[activity] ?? false);
     });
   }
 

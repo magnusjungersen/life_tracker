@@ -16,7 +16,7 @@ class Data1Page extends StatefulWidget {
 class _Data1PageState extends State<Data1Page> {
   double _energy = 50;
   double _mood = 50;
-  double _sleep = 50; 
+  double _productivity = 50; 
   double _stress = 50; 
 
   @override
@@ -35,7 +35,7 @@ class _Data1PageState extends State<Data1Page> {
       setState(() {
         _energy = (data['energy'] as int?)?.toDouble() ?? 50.0;
         _mood = (data['wellbeing'] as int?)?.toDouble() ?? 50.0;
-        _sleep = (data['sleep'] as int?)?.toDouble() ?? 50.0;
+        _productivity = (data['productivity'] as int?)?.toDouble() ?? 50.0;
         _stress = (data['stress'] as int?)?.toDouble() ?? 50.0;
       });
     }
@@ -45,15 +45,26 @@ class _Data1PageState extends State<Data1Page> {
   void _saveData() async {
     DatabaseHelper dbHelper = DatabaseHelper();
 
-    Map<String, dynamic> data = {
+    // get previously added data to only overwrite relevant data
+    Map<String, dynamic>? existingData = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
+
+    // prepare new data
+    Map<String, dynamic> newData = {
       'date': widget.selectedDate.toIso8601String(),
       'energy': _energy.round(),
       'mood': _mood.round(),
-      'sleep': _sleep.round(),
+      'productivity': _productivity.round(),
       'stress': _stress.round(),
     };
 
-    await dbHelper.insertOrUpdateData(data);
+    // merge new and previous data
+    if (existingData != null) {
+      existingData = Map<String, dynamic>.from(existingData); // Create a mutable copy
+      existingData.addAll(newData);
+      newData = existingData;
+    }
+
+    await dbHelper.insertOrUpdateData(newData);
   }
 
   @override
@@ -93,16 +104,16 @@ class _Data1PageState extends State<Data1Page> {
               },
             ),
             const SizedBox(height: 20),
-            Text('Sleep Quality'),
+            Text('productivity'),
             Slider(
-              value: _sleep,
+              value: _productivity,
               min: 0,
               max: 100,
               divisions: 99,
-              // label: _sleep.round().toString(),
+              // label: _productivity.round().toString(),
               onChanged: (double value) {
                 setState(() {
-                  _sleep = value;
+                  _productivity = value;
                 });
               },
             ),
