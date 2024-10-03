@@ -7,6 +7,5 @@ To-do:
 - Add reminders about missing data for yesterday and the day before beneath the calendar overview
 - Maybe add random inspirational quote below as well? (future)
 - Add notifications for 10 pm? and 9 am? "Remember to add data"
-- Setup to work with google sheets (add for this in app ie. don't hardcode sheet)
 - Test on actual phone lol
 

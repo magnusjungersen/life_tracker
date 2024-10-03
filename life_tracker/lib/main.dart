@@ -6,9 +6,13 @@ import 'package:table_calendar/table_calendar.dart';
 import 'data_entry_sliders.dart'; // slider page
 import 'sql.dart';
 import 'google_sheets_sync.dart';
+import 'notifications_handler.dart';
 
 // run the app
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationsHandler.initNotifications();
+  await NotificationsHandler.scheduleNotifications();
   runApp(const LifeTracker());
 }
 
@@ -54,10 +58,17 @@ class _CalendarPageState extends State<CalendarPage> {
     _syncWithGoogleSheets();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadDataStatus();
+  }
+
   // Load data status from SQL database
   void _loadDataStatus() async {
     final allData = await _dbHelper.getAllData();
     setState(() {
+      _dataEntered.clear(); // Clear existing data
       for (var data in allData) {
         final date = DateTime.parse(data['date'] as String);
         _dataEntered[date] = true;
