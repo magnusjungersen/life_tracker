@@ -133,7 +133,7 @@ class DatabaseHelper {
     final db = await database;
 
     try {
-      print('Data to insert: $row'); // Print the data map for debugging
+      // print('Data to insert: $row'); // Print the data map for debugging
       return await db.insert(
         'life_tracking',
         row,

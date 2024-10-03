@@ -1,6 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'dart:io';
 
 class NotificationsHandler {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -9,9 +10,12 @@ class NotificationsHandler {
   static Future<void> initNotifications() async {
     tz.initializeTimeZones();
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('orb'); // app icon
+    final DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings();
     final InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
     );
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
@@ -35,6 +39,7 @@ class NotificationsHandler {
           importance: Importance.high,
           priority: Priority.high,
         ),
+        iOS: DarwinNotificationDetails(),
       ),
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:

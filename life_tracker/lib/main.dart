@@ -28,6 +28,7 @@ class LifeTracker extends StatelessWidget {
         primarySwatch: Colors.deepPurple, 
         brightness: Brightness.dark, 
       ),
+      debugShowCheckedModeBanner: false,
       home: const CalendarPage(),  // Set the CalendarPage as the initial screen
     );
   }
@@ -79,6 +80,9 @@ class _CalendarPageState extends State<CalendarPage> {
   // sync with gsheets
   void _syncWithGoogleSheets() async {
     await GoogleSheetsSync.syncData();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Syncing with Google Sheets...')),
+    );
   }
 
   @override
@@ -89,64 +93,33 @@ class _CalendarPageState extends State<CalendarPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.sync),
-            onPressed: () {
-              _syncWithGoogleSheets();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Syncing with Google Sheets...')),
-              );
-            },
+            onPressed: _syncWithGoogleSheets,
           ),
         ],
       ),
-      body: Column(
-        children: [
-          TableCalendar(
-            firstDay: DateTime.utc(2020, 10, 16),
-            lastDay: DateTime.utc(2030, 3, 14),
-            headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
-            focusedDay: _selectedDay,
-            calendarFormat: _calendarFormat,
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-              });
-            },
-            calendarBuilders: CalendarBuilders(
-              // This builder visually marks the days with data
-              defaultBuilder: (context, date, focusedDay) {
-                if (_dataEntered[date] == true) {
-                  // Return a visually different day (e.g., with a colored background or icon)
-                  return Container(
-                    margin: const EdgeInsets.all(6.0),
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: const BoxDecoration(
-                      color: Colors.greenAccent, // Highlight dates with data
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${date.day}',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  );
-                } else {
-                  // Default look for days without data
-                  return Center(
-                    child: Text('${date.day}'),
-                  );
-                }
-              },
-            ),
-          ),
-        ],
+      body: TableCalendar(
+        firstDay: DateTime.utc(2020, 10, 16),
+        lastDay: DateTime.utc(2030, 3, 14),
+        headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
+        focusedDay: _selectedDay,
+        calendarFormat: _calendarFormat,
+        selectedDayPredicate: (day) {
+          return isSameDay(_selectedDay, day);
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            _selectedDay = selectedDay;
+          });
+        },
+        calendarBuilders: CalendarBuilders(
+          defaultBuilder: (context, date, _) {
+            return _buildCalendarDay(date);
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => Data1Page(selectedDate: _selectedDay),
@@ -157,6 +130,23 @@ class _CalendarPageState extends State<CalendarPage> {
           child: const Icon(Icons.add), // plus icon for button
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+  Widget _buildCalendarDay(DateTime date) {
+    final hasData = _dataEntered[date] == true;
+    return Container(
+      margin: const EdgeInsets.all(4.0),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: hasData ? Colors.greenAccent : null,
+      ),
+      child: Text(
+        '${date.day}',
+        style: TextStyle(
+          color: hasData ? Colors.white : null,
+        ),
+      ),
     );
   }
 }

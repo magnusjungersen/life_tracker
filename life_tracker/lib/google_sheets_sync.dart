@@ -37,9 +37,9 @@ class GoogleSheetsSync {
         await sheet.values.insertRow(i + 2, row);
       }
 
-      print('Data synced successfully');
+      // print('Data synced successfully');
     } catch (e) {
-      print('Error syncing data: $e');
+      // print('Error syncing data: $e');
     }
   }
 }
