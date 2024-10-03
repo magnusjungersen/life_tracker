@@ -7,6 +7,7 @@ import 'data_entry_sliders.dart'; // slider page
 import 'sql.dart';
 import 'google_sheets_sync.dart';
 import 'notifications_handler.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 // run the app
 void main() async {
@@ -51,12 +52,24 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime _selectedDay = DateTime.now();
   final Map<DateTime, bool> _dataEntered = {};  // Map to store if data is entered for a date
   final DatabaseHelper _dbHelper = DatabaseHelper();
-
+  
+  String? _version; // get current version
+  
   @override
   void initState() {
     super.initState();
+    _getVersion(); // load app version
     _loadDataStatus();
     _syncWithGoogleSheets();
+    
+  }
+  
+  // get version
+  Future<void> _getVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _version = packageInfo.version; // Store the version number
+    });
   }
 
   @override
@@ -130,6 +143,19 @@ class _CalendarPageState extends State<CalendarPage> {
           child: const Icon(Icons.add), // plus icon for button
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      bottomNavigationBar: SizedBox(
+        height: 50,
+        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: Text(
+              'Version: ${_version ?? "Loading..."}', // Show version
+              style: const TextStyle(color: Colors.white),
+            ),
+          )
+        ),
+      ),
     );
   }
   Widget _buildCalendarDay(DateTime date) {
