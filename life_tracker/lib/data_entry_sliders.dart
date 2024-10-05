@@ -76,7 +76,7 @@ class _Data1PageState extends State<Data1Page> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Mood Level'),
+            const Text('Mood Level'),
             Slider(
               value: _mood,
               min: 0,
@@ -90,7 +90,7 @@ class _Data1PageState extends State<Data1Page> {
               },
             ),
             const SizedBox(height: 20),
-            Text('Energy Level'),
+            const Text('Energy Level'),
             Slider(
               value: _energy,
               min: 0,
@@ -104,7 +104,7 @@ class _Data1PageState extends State<Data1Page> {
               },
             ),
             const SizedBox(height: 20),
-            Text('productivity'),
+            const Text('Productivity'),
             Slider(
               value: _productivity,
               min: 0,
@@ -118,7 +118,7 @@ class _Data1PageState extends State<Data1Page> {
               },
             ),
             const SizedBox(height: 20),
-            Text('Stress level'),
+            const Text('Stress level'),
             Slider(
               value: _stress,
               min: 0,
