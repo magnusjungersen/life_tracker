@@ -12,13 +12,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 // run the app
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // print('opening app');
-  runApp(const LifeTracker());
-  // print('opening init notif');
   await NotificationsHandler.initNotifications();
-  // print('schedule');
   await NotificationsHandler.scheduleNotifications();
-  // print('main done');
+  runApp(const LifeTracker());
 }
 
 // setup the app
@@ -120,18 +116,16 @@ class _CalendarPageState extends State<CalendarPage> {
         headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
         focusedDay: _selectedDay,
         calendarFormat: _calendarFormat,
-        selectedDayPredicate: (day) {
-          return isSameDay(_selectedDay, day);
-        },
+        selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
         onDaySelected: (selectedDay, focusedDay) {
           setState(() {
             _selectedDay = selectedDay;
           });
         },
         calendarBuilders: CalendarBuilders(
-          defaultBuilder: (context, date, _) {
-            return _buildCalendarDay(date);
-          },
+          defaultBuilder: (context, day, focusedDay) => _buildCalendarDay(day),
+          selectedBuilder: (context, day, focusedDay) => _buildCalendarDay(day),
+          todayBuilder: (context, day, focusedDay) => _buildCalendarDay(day),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -164,17 +158,44 @@ class _CalendarPageState extends State<CalendarPage> {
   }
   Widget _buildCalendarDay(DateTime date) {
     final hasData = _dataEntered[date] == true;
+    final isToday = isSameDay(date, DateTime.now());
+    final isSelected = isSameDay(date, _selectedDay);
+
+    // gets correct for selected date whether or not is has data and is today
+    Color? backgroundColor;
+    if (hasData) {
+      if (isToday && isSelected) {
+        backgroundColor = Colors.green[500]; // Medium green for today when selected
+      } else if (isToday) {
+        backgroundColor = Colors.green[300]; // Light green for today
+      } else if (!isToday && isSelected) {
+        backgroundColor = Colors.green[700]; // color for not today, selected, and with data
+      } else {
+        backgroundColor = Colors.green[900]; // Dark green for days with data
+      }
+    } else if (isToday){
+      if (isSelected) {
+        // backgroundColor = Colors.blue[700];
+        backgroundColor = const Color.fromARGB(221, 163, 186, 248);
+      } else {
+        backgroundColor = const Color.fromARGB(206, 25, 114, 165);
+      }
+    } else if (isSelected) {
+      backgroundColor = Theme.of(context).colorScheme.primary.withOpacity(0.3);
+    }
+    
     return Container(
       margin: const EdgeInsets.all(4.0),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: hasData ? Colors.greenAccent : null,
+        color: backgroundColor,
       ),
       child: Text(
         '${date.day}',
         style: TextStyle(
-          color: hasData ? Colors.white : null,
+          color: hasData || isSelected ? Colors.white : null,
+          fontWeight: isToday || isSelected || isToday ? FontWeight.bold: FontWeight.normal,
         ),
       ),
     );

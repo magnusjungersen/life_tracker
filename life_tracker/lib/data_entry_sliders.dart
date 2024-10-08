@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'sql.dart';
-import 'data_entry_emotions.dart'; // emotions page
 import 'package:intl/intl.dart';
+import 'sql.dart';
+import 'data_entry_emotions.dart';
 
-// Data1Page - sliders for energy and wellbeing data
 class Data1Page extends StatefulWidget {
   final DateTime selectedDate;
 
@@ -14,10 +13,12 @@ class Data1Page extends StatefulWidget {
 }
 
 class _Data1PageState extends State<Data1Page> {
-  double _energy = 50;
-  double _mood = 50;
-  double _productivity = 50; 
-  double _stress = 50; 
+  final Map<String, double> _sliderValues = {
+    'Mood': 50,
+    'Energy': 50,
+    'Productivity': 50,
+    'Stress': 50,
+  };
 
   @override
   void initState() {
@@ -25,117 +26,74 @@ class _Data1PageState extends State<Data1Page> {
     _loadData();
   }
 
-  // Load data for the selected date
-  void _loadData() async {
-    DatabaseHelper dbHelper = DatabaseHelper();
-
-    Map<String, dynamic>? data = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
+  Future<void> _loadData() async {
+    final dbHelper = DatabaseHelper();
+    final data = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
 
     if (data != null) {
       setState(() {
-        _energy = (data['energy'] as int?)?.toDouble() ?? 50.0;
-        _mood = (data['wellbeing'] as int?)?.toDouble() ?? 50.0;
-        _productivity = (data['productivity'] as int?)?.toDouble() ?? 50.0;
-        _stress = (data['stress'] as int?)?.toDouble() ?? 50.0;
+        _sliderValues['Mood'] = (data['mood'] as int?)?.toDouble() ?? 50.0;
+        _sliderValues['Energy'] = (data['energy'] as int?)?.toDouble() ?? 50.0;
+        _sliderValues['Productivity'] = (data['productivity'] as int?)?.toDouble() ?? 50.0;
+        _sliderValues['Stress'] = (data['stress'] as int?)?.toDouble() ?? 50.0;
       });
     }
   }
 
-  // Save data for the selected date
-  void _saveData() async {
-    DatabaseHelper dbHelper = DatabaseHelper();
+  Future<void> _saveData() async {
+    final dbHelper = DatabaseHelper();
+    final existingData = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String()) ?? {};
 
-    // get previously added data to only overwrite relevant data
-    Map<String, dynamic>? existingData = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
-
-    // prepare new data
-    Map<String, dynamic> newData = {
+    final newData = {
       'date': widget.selectedDate.toIso8601String(),
-      'energy': _energy.round(),
-      'mood': _mood.round(),
-      'productivity': _productivity.round(),
-      'stress': _stress.round(),
+      'mood': _sliderValues['Mood']!.round(),
+      'energy': _sliderValues['Energy']!.round(),
+      'productivity': _sliderValues['Productivity']!.round(),
+      'stress': _sliderValues['Stress']!.round(),
     };
 
-    // merge new and previous data
-    if (existingData != null) {
-      existingData = Map<String, dynamic>.from(existingData); // Create a mutable copy
-      existingData.addAll(newData);
-      newData = existingData;
-    }
+    await dbHelper.insertOrUpdateData({...existingData, ...newData});
+  }
 
-    await dbHelper.insertOrUpdateData(newData);
+  Widget _buildSlider(String label) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label),
+        Slider(
+          value: _sliderValues[label]!,
+          min: 0,
+          max: 100,
+          divisions: 100,
+          onChanged: (double value) {
+            setState(() {
+              _sliderValues[label] = value;
+            });
+          },
+        ),
+        const SizedBox(height: 20),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Data Entry - ${DateFormat.yMMMd().format(widget.selectedDate)}')),
+      appBar: AppBar(
+        title: Text('Data Entry - ${DateFormat.yMMMd().format(widget.selectedDate)}'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Mood Level'),
-            Slider(
-              value: _mood,
-              min: 0,
-              max: 100,
-              divisions: 99,
-              // label: _mood.round().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _mood = value;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            const Text('Energy Level'),
-            Slider(
-              value: _energy,
-              min: 0,
-              max: 100,
-              divisions: 99,
-              // label: _energy.round().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _energy = value;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            const Text('Productivity'),
-            Slider(
-              value: _productivity,
-              min: 0,
-              max: 100,
-              divisions: 99,
-              // label: _productivity.round().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _productivity = value;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            const Text('Stress level'),
-            Slider(
-              value: _stress,
-              min: 0,
-              max: 100,
-              divisions: 100,
-              // label: _stress.round().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _stress = value;
-                });
-              },
-            ),
+            ..._sliderValues.keys.map(_buildSlider),
             const Spacer(),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  _saveData();
+                onPressed: () async {
+                  await _saveData();
+                  if (!mounted) return;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
