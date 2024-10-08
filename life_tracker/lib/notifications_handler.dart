@@ -2,6 +2,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:permission_handler/permission_handler.dart';
 
 class NotificationsHandler {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -10,7 +11,7 @@ class NotificationsHandler {
   static Future<void> initNotifications() async {
     tz.initializeTimeZones();
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('orb'); // app icon
+        AndroidInitializationSettings("orb"); // app icon
     final DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings();
     final InitializationSettings initializationSettings = InitializationSettings(
@@ -20,16 +21,26 @@ class NotificationsHandler {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
+  // Method to request notification permission using permission_handler
+  static Future<bool> requestNotificationPermission() async {
+    if (await Permission.notification.isGranted) {
+      return true; // Permission is already granted
+    } else {
+      final status = await Permission.notification.request();
+      return status.isGranted;
+    }
+  }
+
   static Future<void> scheduleNotifications() async {
-    await _scheduleNotification(21, 0, 0); // 9 PM
+    await _scheduleNotification(22, 30, 0); // 10 PM
     await _scheduleNotification(9, 0, 1); // 9 AM
   }
 
   static Future<void> _scheduleNotification(int hour, int minute, int id) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
-      'Data Entry Reminder',
-      'Please, give me data, Daddy',
+      'Life Tracker',
+      'Please, give me data, Daddy uWu',
       _nextInstanceOfTime(hour, minute),
       const NotificationDetails(
         android: AndroidNotificationDetails(
@@ -41,7 +52,6 @@ class NotificationsHandler {
         ),
         iOS: DarwinNotificationDetails(),
       ),
-      androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'data_entry_sliders.dart'; // slider page
 import 'sql.dart';
+import 'dart:io' show Platform;
+import 'dart:io';
 import 'google_sheets_sync.dart';
 import 'notifications_handler.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -12,8 +14,21 @@ import 'package:package_info_plus/package_info_plus.dart';
 // run the app
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize notifications
   await NotificationsHandler.initNotifications();
-  await NotificationsHandler.scheduleNotifications();
+
+  // Request permission for notifications on Android 12+ (API 31+)
+  if (Platform.isAndroid) {
+    final granted = await NotificationsHandler.requestNotificationPermission();
+    if (granted) {
+      // Schedule notifications only if permission is granted
+      await NotificationsHandler.scheduleNotifications();
+    } else {
+      print('Notification permission denied.');
+    }
+  }
+
   runApp(const LifeTracker());
 }
 

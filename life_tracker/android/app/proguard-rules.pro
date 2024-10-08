@@ -16,9 +16,17 @@
 -keep class * implements com.google.gson.TypeAdapterFactory
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
+
+# google sheets
 -keep class com.google.api.** { *; }
 -keep class com.google.auth.** { *; }
 -keep class com.google.common.** { *; }
+
+# notifications
+-keep class com.dexterous.** { *; }
+-keep class io.flutter.plugins.** { *; }
+-keep class org.joda.time.** { *; }
+
 
 # Prevent R8 from leaving Data object members always null
 -keepclassmembers,allowobfuscation class * {
