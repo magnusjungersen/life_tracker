@@ -12,9 +12,13 @@ import 'package:package_info_plus/package_info_plus.dart';
 // run the app
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await NotificationsHandler.initNotifications();
-  await NotificationsHandler.scheduleNotifications();
+  // print('opening app');
   runApp(const LifeTracker());
+  // print('opening init notif');
+  await NotificationsHandler.initNotifications();
+  // print('schedule');
+  await NotificationsHandler.scheduleNotifications();
+  // print('main done');
 }
 
 // setup the app
