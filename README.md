@@ -6,7 +6,7 @@ This is my custom project to integrate how I fell and what activities I do throu
 ### How to install
 Using VS Code flutter plugin is recommended. 
 Connect phone and make sure device is connected in VS code. 
-"flutter run" in terminal to install on device
+"flutter run --release" in terminal to install production version on device
 ???
 Profit
 

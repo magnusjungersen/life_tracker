@@ -2,23 +2,47 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:gsheets/gsheets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'sql.dart';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 class GoogleSheetsSync {
-  static const _spreadsheetId = '1_chI4kqpjmfQwTl5WKnhgx4XY2SBJUTZuKWgOWeyWeU'; // spreadsheet ID
-  static const _worksheetTitle = 'LifeTracker'; // worksheet title
+  static Future<Map<String, String>> _loadConfig() async {
+    // Load the config.json file
+    final configJson = await rootBundle.loadString('assets/config.json');
+    final configData = json.decode(configJson);
+
+    // Choose between debug or release based on kDebugMode
+    if (kDebugMode) {
+      return {
+        'spreadsheetId': configData['debug']['spreadsheetID'],
+        'worksheetTitle': configData['debug']['worksheetTitle'],
+      };
+    } else {
+      return {
+        'spreadsheetId': configData['release']['spreadsheetID'],
+        'worksheetTitle': configData['release']['worksheetTitle'],
+      };
+    }
+  }
 
   static Future<void> syncData() async {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
-      print('No internet connection. Skipping sync.');
+      // print('No internet connection. Skipping sync.');
       return;
     }
 
     try {
       final credentialsJson = await rootBundle.loadString('assets/credentials.json');
       final gsheets = GSheets(credentialsJson);
-      final ss = await gsheets.spreadsheet(_spreadsheetId);
-      final sheet = await ss.worksheetByTitle(_worksheetTitle);
+
+      // Load config depending on whether debug or release
+      final config = await _loadConfig();
+      final spreadsheetId = config['spreadsheetId']!;
+      final worksheetTitle = config['worksheetTitle']!;
+
+      final ss = await gsheets.spreadsheet(spreadsheetId);
+      final sheet = await ss.worksheetByTitle(worksheetTitle);
 
       if (sheet == null) {
         throw Exception('Worksheet not found');

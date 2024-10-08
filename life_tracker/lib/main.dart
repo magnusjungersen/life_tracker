@@ -165,9 +165,9 @@ class _CalendarPageState extends State<CalendarPage> {
     Color? backgroundColor;
     if (hasData) {
       if (isToday && isSelected) {
-        backgroundColor = Colors.green[500]; // Medium green for today when selected
+        backgroundColor = Colors.green[300]; // Medium green for today when selected
       } else if (isToday) {
-        backgroundColor = Colors.green[300]; // Light green for today
+        backgroundColor = Colors.green[500]; // Light green for today
       } else if (!isToday && isSelected) {
         backgroundColor = Colors.green[700]; // color for not today, selected, and with data
       } else {
