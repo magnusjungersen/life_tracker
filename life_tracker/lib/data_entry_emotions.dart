@@ -14,9 +14,9 @@ class Data2Page extends StatefulWidget {
 
 class _Data2PageState extends State<Data2Page> {
   final Map<String, List<String>> _emotionCategories = {
-    'Positive emotions': ["Happy", "Grateful", "Inspired", "Confident", "Proud", "Relaxed", "Content", "Curious", "Optimistic", "Loved", "Calm", "Hopeful"],
-    'Negative emotions': ["Tired", "Indifferent", "Bored", "Sad", "Lonely", "Anxious", "Frustrated", "Overwhelmed", "Angry", "Jealous", "Guilty", "Disappointed", "Nervous", "Grief", "Insecure", "Stressed"],
-    'Complex emotions': ["Restless", "Nostalgic", "Conflicted"],
+    'Positive emotions': ["Calm", "Confident", "Content", "Curious", "Grateful", "Happy", "Hopeful", "Inspired", "Loved", "Optimistic", "Proud", "Relaxed"],
+    'Negative emotions': ["Angry", "Anxious", "Bored", "Disappointed", "Frustrated", "Grief", "Guilty", "Insecure", "Jealous", "Lonely", "Nervous", "Overwhelmed", "Sad", "Stressed", "Tired", "Indifferent"],
+    'Complex emotions': ["Conflicted", "Nostalgic", "Restless"],
   };
   
   final Map<String, bool> _selectedEmotions = {};

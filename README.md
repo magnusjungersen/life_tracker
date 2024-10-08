@@ -8,5 +8,5 @@ Using VS Code flutter plugin is recommended.
 Connect phone and make sure device is connected in VS code. 
 "flutter run --release" in terminal to install production version on device
 ???
-Profit
+Tracking
 

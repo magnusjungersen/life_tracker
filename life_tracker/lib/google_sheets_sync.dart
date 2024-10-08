@@ -14,12 +14,12 @@ class GoogleSheetsSync {
     // Choose between debug or release based on kDebugMode
     if (kDebugMode) {
       return {
-        'spreadsheetId': configData['debug']['spreadsheetID'],
+        'spreadsheetID': configData['debug']['spreadsheetID'],
         'worksheetTitle': configData['debug']['worksheetTitle'],
       };
     } else {
       return {
-        'spreadsheetId': configData['release']['spreadsheetID'],
+        'spreadsheetID': configData['release']['spreadsheetID'],
         'worksheetTitle': configData['release']['worksheetTitle'],
       };
     }
@@ -34,14 +34,15 @@ class GoogleSheetsSync {
 
     try {
       final credentialsJson = await rootBundle.loadString('assets/credentials.json');
+
       final gsheets = GSheets(credentialsJson);
 
       // Load config depending on whether debug or release
       final config = await _loadConfig();
-      final spreadsheetId = config['spreadsheetId']!;
+      final spreadsheetID = config['spreadsheetID']!;
       final worksheetTitle = config['worksheetTitle']!;
 
-      final ss = await gsheets.spreadsheet(spreadsheetId);
+      final ss = await gsheets.spreadsheet(spreadsheetID);
       final sheet = await ss.worksheetByTitle(worksheetTitle);
 
       if (sheet == null) {
@@ -54,7 +55,7 @@ class GoogleSheetsSync {
       // Assuming the first row is headers
       final headers = allData.first.keys.toList();
       await sheet.values.insertRow(1, headers);
-
+      
       // Start from row 2 to skip headers
       for (var i = 0; i < allData.length; i++) {
         final row = allData[i].values.toList();
