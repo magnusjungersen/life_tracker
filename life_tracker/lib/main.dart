@@ -25,7 +25,7 @@ void main() async {
       // Schedule notifications only if permission is granted
       await NotificationsHandler.scheduleNotifications();
     } else {
-      print('Notification permission denied.');
+      // print('Notification permission denied.');
     }
   }
 

@@ -32,7 +32,8 @@ class NotificationsHandler {
   }
 
   static Future<void> scheduleNotifications() async {
-    await _scheduleNotification(22, 30, 0); // 10 PM
+    await _scheduleNotification(22, 0, 0); // 10 PM
+    await _scheduleNotification(17, 27, 2); // test notification
     await _scheduleNotification(9, 0, 1); // 9 AM
   }
 
@@ -40,7 +41,7 @@ class NotificationsHandler {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       'Life Tracker',
-      'Please, give me data, Daddy uWu',
+      'Please give me data, Daddy uWu',
       _nextInstanceOfTime(hour, minute),
       const NotificationDetails(
         android: AndroidNotificationDetails(

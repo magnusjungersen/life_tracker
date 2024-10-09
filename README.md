@@ -23,3 +23,7 @@ and credentials.json for google sheets document.
 - ???
 - Tracking
 
+### Current problems
+- Missing icon for notifications
+- Option for modifying data in app
+- Notification timezones are off

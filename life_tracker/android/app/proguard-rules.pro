@@ -17,6 +17,9 @@
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
 
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.google.gson.examples.android.model.** { <fields>; }
+
 # google sheets
 -keep class com.google.api.** { *; }
 -keep class com.google.auth.** { *; }
