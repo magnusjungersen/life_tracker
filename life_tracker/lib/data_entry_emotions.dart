@@ -31,10 +31,10 @@ class _Data2PageState extends State<Data2Page> {
     final dbHelper = DatabaseHelper();
     // Standardize the date to midnight UTC
     final standardDate = DateTime.utc(
-    widget.selectedDate.year,
-    widget.selectedDate.month,
-    widget.selectedDate.day,
-  ).toIso8601String();
+      widget.selectedDate.year,
+      widget.selectedDate.month,
+      widget.selectedDate.day,
+    ).toIso8601String();
 
     final data = await dbHelper.getDataByDate(standardDate);
     

@@ -141,6 +141,7 @@ class _CalendarPageState extends State<CalendarPage> {
         headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
         focusedDay: _selectedDay,
         calendarFormat: _calendarFormat,
+        startingDayOfWeek: StartingDayOfWeek.monday, // Start week on Monday
         selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
         onDaySelected: (selectedDay, focusedDay) {
           setState(() {
@@ -165,8 +166,7 @@ class _CalendarPageState extends State<CalendarPage> {
             _selectedDay.month,
             _selectedDay.day,
           );
-          print('date being send');
-          print(standardSelectedDay);
+          
           await Navigator.push(
             context,
             MaterialPageRoute(

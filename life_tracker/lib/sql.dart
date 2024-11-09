@@ -157,7 +157,7 @@ class DatabaseHelper {
     final db = await database;
     // Standardize the date to UTC midnight
     final parsedDate = DateTime.parse(date).toUtc(); // Convert to UTC
-    final standardDate = DateTime(parsedDate.year, parsedDate.month, parsedDate.day, 0, 0, 0).toIso8601String(); // Ensure midnight time
+    final standardDate = parsedDate.toIso8601String(); // Ensure midnight time
 
     final List<Map<String, dynamic>> maps = await db.query(
       'life_tracking',

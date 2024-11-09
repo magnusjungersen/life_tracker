@@ -34,8 +34,7 @@ class _Data1PageState extends State<Data1Page> {
       widget.selectedDate.month,
       widget.selectedDate.day,
     ).toIso8601String();
-    print('loaded date');
-    print(standardDate);
+    
     final data = await dbHelper.getDataByDate(standardDate);
 
     if (data != null) {
@@ -56,8 +55,7 @@ class _Data1PageState extends State<Data1Page> {
       widget.selectedDate.month,
       widget.selectedDate.day,
     ).toIso8601String(); // Convert to local time and format to "yyyy-MM-dd"
-    print('saved date');
-    print(standardDate);
+    
     final existingData = await dbHelper.getDataByDate(standardDate) ?? {};
 
     final newData = {
