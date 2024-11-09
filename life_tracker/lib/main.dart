@@ -99,18 +99,32 @@ class _CalendarPageState extends State<CalendarPage> {
     setState(() {
       _dataEntered.clear(); // Clear existing data
       for (var data in allData) {
-        final date = DateTime.parse(data['date'] as String);
-        _dataEntered[date] = true;
+        // Standardize the parsed date to midnight UTC
+        final dateStr = data['date'] as String;
+        final parsedDate = DateTime.parse(dateStr);
+        final standardDate = DateTime.utc(
+          parsedDate.year,
+          parsedDate.month,
+          parsedDate.day,
+        );
+        _dataEntered[standardDate] = true;
       }
     });
   }
 
   // sync with gsheets
   void _syncWithGoogleSheets() async {
-    await GoogleSheetsSync.syncData();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Syncing with Google Sheets...')),
-    );
+    try {
+      await GoogleSheetsSync.syncData();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Syncing with Google Sheets...')),
+      );
+      // print('_syncWithGoogleSheets, main.dart');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to sync with Google Sheets.')),
+      );
+    }
   }
 
   @override
@@ -134,7 +148,12 @@ class _CalendarPageState extends State<CalendarPage> {
         selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
         onDaySelected: (selectedDay, focusedDay) {
           setState(() {
-            _selectedDay = selectedDay;
+            // Standardize the selected day to midnight UTC
+            _selectedDay = DateTime.utc(
+              selectedDay.year,
+              selectedDay.month,
+              selectedDay.day,
+            );
           });
         },
         calendarBuilders: CalendarBuilders(
@@ -145,10 +164,17 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          // Standardize the selected day before passing to Data1Page
+          final standardSelectedDay = DateTime.utc(
+            _selectedDay.year,
+            _selectedDay.month,
+            _selectedDay.day,
+          );
+          
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Data1Page(selectedDate: _selectedDay),
+              builder: (context) => Data1Page(selectedDate: standardSelectedDay),
             ),
           );
           _loadDataStatus();
@@ -172,9 +198,20 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
   Widget _buildCalendarDay(DateTime date) {
-    final hasData = _dataEntered[date] == true;
-    final isToday = isSameDay(date, DateTime.now());
-    final isSelected = isSameDay(date, _selectedDay);
+    // Standardize the input date for comparison
+    final standardDate = DateTime.utc(
+      date.year,
+      date.month,
+      date.day,
+    );
+
+    final hasData = _dataEntered[standardDate] == true;
+    final isToday = isSameDay(standardDate, DateTime.utc(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    ));
+    final isSelected = isSameDay(standardDate, _selectedDay);
 
     // gets correct for selected date whether or not is has data and is today
     Color? backgroundColor;

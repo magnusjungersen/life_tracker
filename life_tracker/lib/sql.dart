@@ -147,10 +147,13 @@ class DatabaseHelper {
 
   Future<Map<String, dynamic>?> getDataByDate(String date) async {
     final db = await database;
+    // Standardize the date to midnight UTC
+    final standardDate = DateTime.parse(date).toUtc().toIso8601String().split('T')[0];
+
     final List<Map<String, dynamic>> maps = await db.query(
       'life_tracking',
       where: 'date = ?',
-      whereArgs: [date],
+      whereArgs: [standardDate],
     );
 
     if (maps.isNotEmpty) {

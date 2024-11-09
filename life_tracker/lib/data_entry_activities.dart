@@ -41,7 +41,14 @@ class _Data3PageState extends State<Data3Page> {
 
   Future<void> _loadActivities() async {
     final dbHelper = DatabaseHelper();
-    final data = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
+    // Standardize the date to midnight UTC
+    final standardDate = DateTime(
+      widget.selectedDate.year,
+      widget.selectedDate.month,
+      widget.selectedDate.day,
+    ).toUtc().toIso8601String().split('T')[0];
+
+    final data = await dbHelper.getDataByDate(standardDate);
     
     if (data != null) {
       setState(() {
@@ -57,10 +64,17 @@ class _Data3PageState extends State<Data3Page> {
 
   Future<void> _saveActivities() async {
     final dbHelper = DatabaseHelper();
-    final existingData = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String()) ?? {};
+    // Standardize the date to midnight UTC
+    final standardDate = DateTime(
+      widget.selectedDate.year,
+      widget.selectedDate.month,
+      widget.selectedDate.day,
+    ).toUtc().toIso8601String().split('T')[0];
+
+    final existingData = await dbHelper.getDataByDate(standardDate) ?? {};
 
     final newData = {
-      'date': widget.selectedDate.toIso8601String(),
+      'date': standardDate,
       ..._ratings,
       for (final activity in _selectedActivities.keys)
         activity.replaceAll(' ', '_').toLowerCase(): _selectedActivities[activity]! ? 1 : 0,

@@ -29,7 +29,14 @@ class _Data2PageState extends State<Data2Page> {
 
   Future<void> _loadEmotions() async {
     final dbHelper = DatabaseHelper();
-    final data = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
+    // Standardize the date to midnight UTC
+    final standardDate = DateTime(
+      widget.selectedDate.year,
+      widget.selectedDate.month,
+      widget.selectedDate.day,
+    ).toUtc().toIso8601String().split('T')[0];
+
+    final data = await dbHelper.getDataByDate(standardDate);
     
     if (data != null) {
       setState(() {
@@ -44,10 +51,17 @@ class _Data2PageState extends State<Data2Page> {
 
   Future<void> _saveEmotions() async {
     final dbHelper = DatabaseHelper();
-    final existingData = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String()) ?? {};
+    // Standardize the date to midnight UTC
+    final standardDate = DateTime(
+      widget.selectedDate.year,
+      widget.selectedDate.month,
+      widget.selectedDate.day,
+    ).toUtc().toIso8601String().split('T')[0];
+
+    final existingData = await dbHelper.getDataByDate(standardDate) ?? {};
 
     final newData = {
-      'date': widget.selectedDate.toIso8601String(),
+      'date': standardDate, // use standardized date
       for (final emotion in _selectedEmotions.keys)
         emotion.replaceAll(' ', '_').toLowerCase(): _selectedEmotions[emotion]! ? 1 : 0,
     };

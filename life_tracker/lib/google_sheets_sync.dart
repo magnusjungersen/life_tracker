@@ -52,6 +52,8 @@ class GoogleSheetsSync {
       final dbHelper = DatabaseHelper();
       final allData = await dbHelper.getAllData();
 
+      // print('allData');
+
       // Assuming the first row is headers
       final headers = allData.first.keys.toList();
       await sheet.values.insertRow(1, headers);

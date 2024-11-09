@@ -28,7 +28,14 @@ class _Data1PageState extends State<Data1Page> {
 
   Future<void> _loadData() async {
     final dbHelper = DatabaseHelper();
-    final data = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String());
+    // Standardize the date to midnight UTC
+    final standardDate = DateTime(
+      widget.selectedDate.year,
+      widget.selectedDate.month,
+      widget.selectedDate.day,
+    ).toUtc().toIso8601String().split('T')[0];
+
+    final data = await dbHelper.getDataByDate(standardDate);
 
     if (data != null) {
       setState(() {
@@ -42,10 +49,17 @@ class _Data1PageState extends State<Data1Page> {
 
   Future<void> _saveData() async {
     final dbHelper = DatabaseHelper();
-    final existingData = await dbHelper.getDataByDate(widget.selectedDate.toIso8601String()) ?? {};
+    // Standardize the date to midnight UTC
+    final standardDate = DateTime(
+      widget.selectedDate.year,
+      widget.selectedDate.month,
+      widget.selectedDate.day,
+    ).toUtc().toIso8601String().split('T')[0];
+
+    final existingData = await dbHelper.getDataByDate(standardDate) ?? {};
 
     final newData = {
-      'date': widget.selectedDate.toIso8601String(),
+      'date': standardDate,
       'mood': _sliderValues['Mood']!.round(),
       'energy': _sliderValues['Energy']!.round(),
       'productivity': _sliderValues['Productivity']!.round(),

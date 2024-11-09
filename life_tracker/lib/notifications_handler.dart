@@ -35,9 +35,10 @@ class NotificationsHandler {
   }
 
   static Future<void> scheduleNotifications() async {
-    await _scheduleNotification(22, 0, 0); // 10 PM
-    await _scheduleNotification(17, 47, 2); // test notification
+    // notifications (hour, minute, id)
     await _scheduleNotification(9, 0, 1); // 9 AM
+    await _scheduleNotification(22, 0, 0); // 10 PM
+    await _scheduleNotification(16, 50, 2); // test notification
   }
 
   static Future<void> _scheduleNotification(int hour, int minute, int id) async {
