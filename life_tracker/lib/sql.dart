@@ -135,7 +135,7 @@ class DatabaseHelper {
     // Ensure the date is in UTC and standardized to midnight
     final date = row['date'] as String;
     final parsedDate = DateTime.parse(date).toUtc(); // Convert to UTC
-    final standardDate = DateTime(parsedDate.year, parsedDate.month, parsedDate.day, 0, 0, 0).toIso8601String(); // Ensure midnight time
+    final standardDate = parsedDate.toIso8601String();
 
     // Update the row with the standardized date
     row['date'] = standardDate;

@@ -164,7 +164,9 @@ class _CalendarPageState extends State<CalendarPage> {
             _selectedDay.year,
             _selectedDay.month,
             _selectedDay.day,
-          );// Ensure local timezone
+          );
+          print('date being send');
+          print(standardSelectedDay);
           await Navigator.push(
             context,
             MaterialPageRoute(

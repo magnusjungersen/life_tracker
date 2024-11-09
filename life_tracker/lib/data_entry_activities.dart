@@ -41,11 +41,11 @@ class _Data3PageState extends State<Data3Page> {
 
   Future<void> _loadActivities() async {
     final dbHelper = DatabaseHelper();
-    final standardDate = DateTime(
+    final standardDate = DateTime.utc(
       widget.selectedDate.year,
       widget.selectedDate.month,
       widget.selectedDate.day,
-    ).toLocal().toIso8601String().split('T')[0]; // Convert to local time and format to "yyyy-MM-dd"
+    ).toIso8601String(); // Convert to local time and format to "yyyy-MM-dd"
 
     final data = await dbHelper.getDataByDate(standardDate);
     
@@ -64,11 +64,11 @@ class _Data3PageState extends State<Data3Page> {
   Future<void> _saveActivities() async {
     final dbHelper = DatabaseHelper();
     // Standardize the date to midnight local time
-    final standardDate = DateTime(
+    final standardDate = DateTime.utc(
       widget.selectedDate.year,
       widget.selectedDate.month,
       widget.selectedDate.day,
-    ).toLocal().toIso8601String().split('T')[0]; // Convert to local time and format to "yyyy-MM-dd"
+    ).toIso8601String(); // Convert to local time and format to "yyyy-MM-dd"
 
     final existingData = await dbHelper.getDataByDate(standardDate) ?? {};
 
