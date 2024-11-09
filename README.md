@@ -1,7 +1,7 @@
 # Life Tracker
 Personal custom mobile app for tracking daily activities, mood etc.
 
-Person app for tracking my mood, productivity, feelings and activities. No statistics or fancy graphics are included to bias your view. 
+Personal app for tracking my mood, productivity, feelings and activities. No statistics or fancy graphics are included to bias your view. 
 
 - Will per default give reminder notifications at 9 AM and 10 PM. 
 
@@ -24,6 +24,4 @@ and credentials.json for google sheets document.
 - Tracking
 
 ### Current problems
-- Missing icon for notifications
 - Option for modifying data in app
-- Notification timezones are off
