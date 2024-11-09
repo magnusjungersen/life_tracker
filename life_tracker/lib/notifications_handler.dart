@@ -1,4 +1,3 @@
-// import packages
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
@@ -9,11 +8,15 @@ class NotificationsHandler {
       FlutterLocalNotificationsPlugin();
 
   static Future<void> initNotifications() async {
+    //initialize timezones database
     tz.initializeTimeZones();
+
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings("orb"); // app icon
+    
     final DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings();
+    
     final InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
@@ -33,7 +36,7 @@ class NotificationsHandler {
 
   static Future<void> scheduleNotifications() async {
     await _scheduleNotification(22, 0, 0); // 10 PM
-    await _scheduleNotification(17, 27, 2); // test notification
+    await _scheduleNotification(17, 47, 2); // test notification
     await _scheduleNotification(9, 0, 1); // 9 AM
   }
 
