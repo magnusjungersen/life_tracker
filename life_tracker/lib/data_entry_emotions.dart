@@ -31,10 +31,10 @@ class _Data2PageState extends State<Data2Page> {
     final dbHelper = DatabaseHelper();
     // Standardize the date to midnight UTC
     final standardDate = DateTime(
-      widget.selectedDate.year,
-      widget.selectedDate.month,
-      widget.selectedDate.day,
-    ).toUtc().toIso8601String().split('T')[0];
+    widget.selectedDate.year,
+    widget.selectedDate.month,
+    widget.selectedDate.day,
+  ).toLocal().toIso8601String().split('T')[0]; // Convert to local time and format to "yyyy-MM-dd"
 
     final data = await dbHelper.getDataByDate(standardDate);
     
@@ -52,11 +52,12 @@ class _Data2PageState extends State<Data2Page> {
   Future<void> _saveEmotions() async {
     final dbHelper = DatabaseHelper();
     // Standardize the date to midnight UTC
+    // Standardize the date and format it as "yyyy-MM-dd"
     final standardDate = DateTime(
       widget.selectedDate.year,
       widget.selectedDate.month,
       widget.selectedDate.day,
-    ).toUtc().toIso8601String().split('T')[0];
+    ).toLocal().toIso8601String().split('T')[0]; // Convert to local time and format to "yyyy-MM-dd"
 
     final existingData = await dbHelper.getDataByDate(standardDate) ?? {};
 

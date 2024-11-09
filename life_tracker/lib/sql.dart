@@ -132,6 +132,14 @@ class DatabaseHelper {
   Future<int> insertOrUpdateData(Map<String, dynamic> row) async {
     final db = await database;
 
+    // Ensure the date is in UTC and standardized to midnight
+    final date = row['date'] as String;
+    final parsedDate = DateTime.parse(date).toUtc(); // Convert to UTC
+    final standardDate = DateTime(parsedDate.year, parsedDate.month, parsedDate.day, 0, 0, 0).toIso8601String(); // Ensure midnight time
+
+    // Update the row with the standardized date
+    row['date'] = standardDate;
+
     try {
       // print('Data to insert: $row'); // Print the data map for debugging
       return await db.insert(
@@ -147,8 +155,9 @@ class DatabaseHelper {
 
   Future<Map<String, dynamic>?> getDataByDate(String date) async {
     final db = await database;
-    // Standardize the date to midnight UTC
-    final standardDate = DateTime.parse(date).toUtc().toIso8601String().split('T')[0];
+    // Standardize the date to UTC midnight
+    final parsedDate = DateTime.parse(date).toUtc(); // Convert to UTC
+    final standardDate = DateTime(parsedDate.year, parsedDate.month, parsedDate.day, 0, 0, 0).toIso8601String(); // Ensure midnight time
 
     final List<Map<String, dynamic>> maps = await db.query(
       'life_tracking',

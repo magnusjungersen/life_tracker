@@ -33,7 +33,7 @@ class _Data1PageState extends State<Data1Page> {
       widget.selectedDate.year,
       widget.selectedDate.month,
       widget.selectedDate.day,
-    ).toUtc().toIso8601String().split('T')[0];
+    ).toUtc().toIso8601String().split('T')[0]; // Convert to local time and format to "yyyy-MM-dd"
 
     final data = await dbHelper.getDataByDate(standardDate);
 
@@ -54,7 +54,7 @@ class _Data1PageState extends State<Data1Page> {
       widget.selectedDate.year,
       widget.selectedDate.month,
       widget.selectedDate.day,
-    ).toUtc().toIso8601String().split('T')[0];
+    ).toUtc().toIso8601String().split('T')[0]; // Convert to local time and format to "yyyy-MM-dd"
 
     final existingData = await dbHelper.getDataByDate(standardDate) ?? {};
 
@@ -111,7 +111,7 @@ class _Data1PageState extends State<Data1Page> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Data2Page(selectedDate: widget.selectedDate),
+                      builder: (context) => Data2Page(selectedDate: widget.selectedDate ),
                     ),
                   );
                 },

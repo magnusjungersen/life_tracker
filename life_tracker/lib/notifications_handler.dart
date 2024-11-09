@@ -38,7 +38,7 @@ class NotificationsHandler {
     // notifications (hour, minute, id)
     await _scheduleNotification(9, 0, 1); // 9 AM
     await _scheduleNotification(22, 0, 0); // 10 PM
-    await _scheduleNotification(16, 50, 2); // test notification
+    // await _scheduleNotification(16, 50, 2); // test notification
   }
 
   static Future<void> _scheduleNotification(int hour, int minute, int id) async {
@@ -64,9 +64,9 @@ class NotificationsHandler {
   }
 
   static tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.UTC); // Change to UTC
     tz.TZDateTime scheduledDate =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+        tz.TZDateTime(tz.UTC, now.year, now.month, now.day, hour, minute); // Change to UTC
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }

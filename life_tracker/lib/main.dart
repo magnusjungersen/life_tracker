@@ -101,12 +101,8 @@ class _CalendarPageState extends State<CalendarPage> {
       for (var data in allData) {
         // Standardize the parsed date to midnight UTC
         final dateStr = data['date'] as String;
-        final parsedDate = DateTime.parse(dateStr);
-        final standardDate = DateTime.utc(
-          parsedDate.year,
-          parsedDate.month,
-          parsedDate.day,
-        );
+        final parsedDate = DateTime.parse(dateStr).toUtc();  // Convert to UTC
+        final standardDate = DateTime.utc(parsedDate.year, parsedDate.month, parsedDate.day); // Midnight UTC
         _dataEntered[standardDate] = true;
       }
     });
@@ -148,7 +144,6 @@ class _CalendarPageState extends State<CalendarPage> {
         selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
         onDaySelected: (selectedDay, focusedDay) {
           setState(() {
-            // Standardize the selected day to midnight UTC
             _selectedDay = DateTime.utc(
               selectedDay.year,
               selectedDay.month,
@@ -164,13 +159,12 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // Standardize the selected day before passing to Data1Page
+          // Standardize the selected day to UTC midnight
           final standardSelectedDay = DateTime.utc(
             _selectedDay.year,
             _selectedDay.month,
             _selectedDay.day,
-          );
-          
+          );// Ensure local timezone
           await Navigator.push(
             context,
             MaterialPageRoute(
