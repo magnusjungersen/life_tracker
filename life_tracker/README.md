@@ -1,6 +1,27 @@
-# life_tracker
+# Life Tracker
+Personal custom mobile app for tracking daily activities, mood etc.
 
-My personal life tracking app. 
-Made using Flutter and tested for Android. 
+Personal app for tracking my mood, productivity, feelings and activities. No statistics or fancy graphics are included to bias your view. 
 
-See "AppOverview.md" for full list of what I'm tracking
+- Will per default give reminder notifications at 9 AM and 10 PM. 
+
+## Files needed
+Assets folder expects config.json:
+{
+  "release": {
+    "spreadsheetID": "your spreadsheetID",
+    "worksheetTitle": "your worksheetTitle"
+  }
+}
+
+and credentials.json for google sheets document. 
+
+### How to install
+- Using VS Code flutter plugin is recommended. 
+- Connect phone and make sure device is connected in VS code. 
+- "flutter run --release" in terminal to install production version on device
+- ???
+- Tracking
+
+### Current problems
+- Option for modifying data in app
